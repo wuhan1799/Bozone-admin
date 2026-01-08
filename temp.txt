@@ -1,0 +1,31 @@
+# ============================================
+# 动态路由模式配置
+# ============================================
+
+# 认证路由模式：改为 dynamic（从后端获取路由）
+VITE_AUTH_ROUTE_MODE=dynamic
+
+# 静态超级管理员角色：改为 super_admin（与数据库一致）
+VITE_STATIC_SUPER_ROLE=super_admin
+
+# 静态路由首页：不需要（动态模式下由后端定义）
+# VITE_ROUTE_HOME=home
+
+# 其他配置保持不变
+VITE_BASE_URL=/
+VITE_APP_TITLE=Bozone
+VITE_APP_DESC=SoybeanAdmin is a fresh and elegant admin template
+VITE_ICON_PREFIX=icon
+VITE_ICON_LOCAL_PREFIX=icon-local
+VITE_MENU_ICON=mdi:menu
+VITE_HTTP_PROXY=Y
+VITE_ROUTER_HISTORY_MODE=history
+VITE_SERVICE_BASE_URL=/api
+VITE_SERVICE_SUCCESS_CODE=0000
+VITE_SERVICE_LOGOUT_CODES=8888,8889
+VITE_SERVICE_MODAL_LOGOUT_CODES=7777,7778
+VITE_SERVICE_EXPIRED_TOKEN_CODES=9999,9998,3333
+VITE_STORAGE_PREFIX=SOY_
+VITE_AUTOMATICALLY_DETECT_UPDATE=Y
+VITE_PROXY_LOG=Y
+VITE_DEVTOOLS_LAUNCH_EDITOR=code
