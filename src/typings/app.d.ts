@@ -421,6 +421,7 @@ declare namespace App {
             loginOrRegister: string;
             userNamePlaceholder: string;
             phonePlaceholder: string;
+            emailPlaceholder: string;
             codePlaceholder: string;
             passwordPlaceholder: string;
             confirmPasswordPlaceholder: string;
@@ -441,6 +442,8 @@ declare namespace App {
             superAdmin: string;
             admin: string;
             user: string;
+            imgCode: string;
+            imgCodePlaceholder: string;
           };
           codeLogin: {
             title: string;

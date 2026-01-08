@@ -1,27 +1,23 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { REG_EMAIL } from '@/constants/reg';
 import { useRouterPush } from '@/hooks/common/router';
 import { useForm, useFormRules } from '@/hooks/common/form';
-import { useCaptcha } from '@/hooks/business/captcha';
-import { sendEmailCaptcha } from '@/service-alova/api/auth';
 import { $t } from '@/locales';
 
-defineOptions({ name: 'ResetPwd' });
+defineOptions({ name: 'ResetPwdPhone' });
 
 const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useForm();
-const { label, isCounting, loading } = useCaptcha();
 
 interface FormModel {
-  email: string;
+  phone: string;
   code: string;
   password: string;
   confirmPassword: string;
 }
 
 const model = ref<FormModel>({
-  email: '',
+  phone: '',
   code: '',
   password: '',
   confirmPassword: ''
@@ -33,31 +29,11 @@ const rules = computed<RuleRecord>(() => {
   const { formRules, createConfirmPwdRule } = useFormRules();
 
   return {
-    email: formRules.email,
+    phone: formRules.phone,
     password: formRules.pwd,
     confirmPassword: createConfirmPwdRule(model.value.password)
   };
 });
-
-async function handleGetCode() {
-  const email = model.value.email;
-
-  if (!email.trim()) {
-    window.$message?.error($t('form.email.required'));
-    return;
-  }
-
-  if (!REG_EMAIL.test(email)) {
-    window.$message?.error($t('form.email.invalid'));
-    return;
-  }
-
-  try {
-    await sendEmailCaptcha(email);
-    window.$message?.success($t('page.login.codeLogin.sendCodeSuccess'));
-    useCaptcha().start();
-  } catch {}
-}
 
 async function handleSubmit() {
   await validate();
@@ -68,16 +44,11 @@ async function handleSubmit() {
 
 <template>
   <ElForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <ElFormItem prop="email">
-      <ElInput v-model="model.email" :placeholder="$t('page.login.common.emailPlaceholder')" />
+    <ElFormItem prop="phone">
+      <ElInput v-model="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
     </ElFormItem>
     <ElFormItem prop="code">
-      <div class="w-full flex gap-12px">
-        <ElInput v-model="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <ElButton :disabled="isCounting" :loading="loading" @click="handleGetCode">
-          {{ label }}
-        </ElButton>
-      </div>
+      <ElInput v-model="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
     </ElFormItem>
     <ElFormItem prop="password">
       <ElInput

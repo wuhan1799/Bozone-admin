@@ -47,6 +47,12 @@ export const alova = createAlovaRequest(
       }
     },
     async isBackendSuccess(response) {
+      // Check if response is a blob (image or binary data)
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
+        return true;
+      }
+
       // when the backend response code is "0000"(default), it means the request is success
       // to change this logic by yourself, you can modify the `VITE_SERVICE_SUCCESS_CODE` in `.env` file
       const resp = response.clone();
@@ -54,6 +60,12 @@ export const alova = createAlovaRequest(
       return String(data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },
     async transformBackendResponse(response) {
+      // Check if response is a blob (image or binary data)
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
+        return await response.blob();
+      }
+
       return (await response.clone().json()).data;
     },
     async onError(error, response) {

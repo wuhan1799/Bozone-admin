@@ -234,6 +234,7 @@ const local: App.I18n.Schema = {
         loginOrRegister: 'Login / Register',
         userNamePlaceholder: 'Please enter user name',
         phonePlaceholder: 'Please enter phone number',
+        emailPlaceholder: 'Please enter email',
         codePlaceholder: 'Please enter verification code',
         passwordPlaceholder: 'Please enter password',
         confirmPasswordPlaceholder: 'Please enter password again',
@@ -253,7 +254,9 @@ const local: App.I18n.Schema = {
         otherLoginMode: 'Other Login Mode',
         superAdmin: 'Super Admin',
         admin: 'Admin',
-        user: 'User'
+        user: 'User',
+        imgCode: 'Image Code',
+        imgCodePlaceholder: 'Please enter image verification code'
       },
       codeLogin: {
         title: 'Verification Code Login',

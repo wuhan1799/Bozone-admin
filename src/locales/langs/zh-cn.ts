@@ -234,6 +234,7 @@ const local: App.I18n.Schema = {
         loginOrRegister: '登录 / 注册',
         userNamePlaceholder: '请输入用户名',
         phonePlaceholder: '请输入手机号',
+        emailPlaceholder: '请输入邮箱',
         codePlaceholder: '请输入验证码',
         passwordPlaceholder: '请输入密码',
         confirmPasswordPlaceholder: '请再次输入密码',
@@ -253,7 +254,9 @@ const local: App.I18n.Schema = {
         otherLoginMode: '其他登录方式',
         superAdmin: '超级管理员',
         admin: '管理员',
-        user: '普通用户'
+        user: '普通用户',
+        imgCode: '图片验证码',
+        imgCodePlaceholder: '请输入图片验证码'
       },
       codeLogin: {
         title: '验证码登录',

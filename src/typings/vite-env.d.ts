@@ -1,7 +1,7 @@
 /**
  * Namespace Env
  *
- * It is used to declare the type of the import.meta object
+ * It is used to declare of type of import.meta object
  */
 declare namespace Env {
   /** The router history mode */
@@ -9,8 +9,10 @@ declare namespace Env {
 
   /** Interface for import.meta */
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  interface ImportMeta extends ImportMetaEnv {
-    /** The base url of the application */
+  interface ImportMeta {
+    /** Whether the app is running in development mode */
+    readonly DEV: boolean;
+    /** The base url of application */
     readonly VITE_BASE_URL: string;
     /** The title of the application */
     readonly VITE_APP_TITLE: string;
@@ -23,7 +25,7 @@ declare namespace Env {
     /**
      * The prefix of the local icon
      *
-     * This prefix is start with the icon prefix
+     * This prefix is start with icon prefix
      */
     readonly VITE_ICON_LOCAL_PREFIX: 'icon-local';
     /** backend service base url */
@@ -37,7 +39,7 @@ declare namespace Env {
     /**
      * logout codes of backend service
      *
-     * when the code is received, the user will be logged out and redirected to login page
+     * when the code is received, the user will be logged out and redirected to the login page
      *
      * use "," to separate multiple codes
      */
@@ -58,12 +60,12 @@ declare namespace Env {
      * use "," to separate multiple codes
      */
     readonly VITE_SERVICE_EXPIRED_TOKEN_CODES: string;
-    /** when the route mode is static, the defined super role */
+    /** when the route mode is static, defined super role */
     readonly VITE_STATIC_SUPER_ROLE: string;
     /**
      * other backend service base url
      *
-     * the value is a json
+     * value is a json
      */
     readonly VITE_OTHER_SERVICE_BASE_URL: string;
     /**
@@ -75,8 +77,8 @@ declare namespace Env {
     /**
      * The auth route mode
      *
-     * - Static: the auth routes is generated in front-end
-     * - Dynamic: the auth routes is generated in back-end
+     * - Static: auth routes are generated in front-end
+     * - Dynamic: auth routes are generated in back-end
      */
     readonly VITE_AUTH_ROUTE_MODE: 'static' | 'dynamic';
     /**
@@ -97,14 +99,14 @@ declare namespace Env {
     /**
      * Iconify api provider url
      *
-     * If the project is deployed in intranet, you can set the api provider url to the local iconify server
+     * If the project is deployed in the intranet, you can set the api provider url to the local iconify server
      *
      * @link https://docs.iconify.design/api/providers.html
      */
     readonly VITE_ICONIFY_URL?: string;
     /** Used to differentiate storage across different domains */
     readonly VITE_STORAGE_PREFIX?: string;
-    /** Whether to automatically detect updates after configuring application packaging */
+    /** Whether to automatically detect updates after configuring the application packaging */
     readonly VITE_AUTOMATICALLY_DETECT_UPDATE?: CommonType.YesOrNo;
     /** show proxy url log in terminal */
     readonly VITE_PROXY_LOG?: CommonType.YesOrNo;
