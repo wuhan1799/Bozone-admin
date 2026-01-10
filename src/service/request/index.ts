@@ -23,6 +23,16 @@ export const request = createFlatRequest(
       refreshTokenPromise: null
     } as RequestInstanceState,
     transform(response: AxiosResponse<App.Service.Response<any>>) {
+      // 后端 /route/getUserRoutes 返回的数据结构不正确，直接在 response.data 下有 routes 和 home
+      // 而不是在 response.data.data 下。需要特殊处理。
+      if (response.config.url === '/route/getUserRoutes' && response.data.data === undefined) {
+        // 如果是 getUserRoutes 且 data 字段不存在，直接返回整个 response.data（去掉 code 和 message）
+        // 这样可以保留 routes 和 home 字段
+        const { routes, home } = response.data;
+        return { routes, home };
+      }
+
+      // 正常情况，返回 response.data.data
       return response.data.data;
     },
     async onRequest(config) {

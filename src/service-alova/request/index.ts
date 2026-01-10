@@ -22,19 +22,21 @@ const mockAdapter = createAlovaMockAdapter([featureUsers20241014], {
   delay: 1000,
 
   // global mock toggle
-  enable: true,
+  enable: false,
   matchMode: 'methodurl'
 });
 export const alova = createAlovaRequest(
   {
     baseURL,
-    requestAdapter: import.meta.env.DEV ? mockAdapter : adapterFetch()
+    requestAdapter: adapterFetch()
   },
   {
     onRequest({ config }) {
       const Authorization = getAuthorization();
       config.headers.Authorization = Authorization;
       config.headers.apifoxToken = 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2';
+
+      return config;
     },
     tokenRefresher: {
       async isExpired(response) {
@@ -49,7 +51,9 @@ export const alova = createAlovaRequest(
     async isBackendSuccess(response) {
       // Check if response is a blob (image or binary data)
       const contentType = response.headers.get('content-type') || '';
-      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
+      const responseType = response.config?.responseType;
+
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream' || responseType === 'blob') {
         return true;
       }
 
@@ -62,7 +66,8 @@ export const alova = createAlovaRequest(
     async transformBackendResponse(response) {
       // Check if response is a blob (image or binary data)
       const contentType = response.headers.get('content-type') || '';
-      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
+
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream' || response.config?.responseType === 'blob') {
         return await response.blob();
       }
 

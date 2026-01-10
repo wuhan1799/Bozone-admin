@@ -66,7 +66,10 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
       tabs.value = updateTabsByI18nKey(extractedTabs);
     }
 
-    addTab(currentRoute);
+    // 不添加登录路由的标签
+    if (currentRoute.name !== 'login') {
+      addTab(currentRoute);
+    }
   }
 
   /**
@@ -76,6 +79,11 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
    * @param active Whether to activate the added tab
    */
   function addTab(route: App.Global.TabRoute, active = true) {
+    // 不添加登录路由的标签
+    if (route.name === 'login') {
+      return;
+    }
+
     const tab = getTabByRoute(route);
 
     const isHomeTab = tab.id === homeTab.value?.id;

@@ -5,10 +5,18 @@ import { alova } from '../request';
  *
  * @param userName User name
  * @param password Password
- * @param [imgCode] Image verification code
+ * @param [captchaCode] Image verification code
+ * @param [captchaKey] Captcha key
  */
-export function fetchLogin(userName: string, password: string, imgCode?: string) {
-  return alova.Post<Api.Auth.LoginToken>('/auth/login', { userName, password, imgCode });
+// eslint-disable-next-line max-params
+export function fetchLogin(
+  userName: string,
+  password: string,
+  captchaCode: string = '',
+  captchaKey: string = '',
+  rememberMe: boolean = false
+) {
+  return alova.Post<Api.Auth.LoginToken>('/auth/login', { userName, password, captchaCode, captchaKey, rememberMe });
 }
 
 /** Get user info */
@@ -68,4 +76,9 @@ export function fetchCustomBackendError(code: string, msg: string) {
     params: { code, msg },
     shareRequest: false
   });
+}
+
+/** Logout */
+export function fetchLogout() {
+  return alova.Post<null>('/auth/logout', {});
 }

@@ -79,7 +79,9 @@ export function useRouterPush(inSetup = true) {
       redirect
     };
 
-    return routerPushByKey('login', options);
+    // 总是使用路径导航，避免路由检查问题
+    const path = `/login/${module}`;
+    return routerPush({ path, query: options.query });
   }
 
   /**
@@ -89,8 +91,9 @@ export function useRouterPush(inSetup = true) {
    */
   async function toggleLoginModule(module: UnionKey.LoginModule) {
     const query = route.value.query as Record<string, string>;
+    const path = `/login/${module}`;
 
-    return routerPushByKey('login', { query, params: { module } });
+    return routerPush({ path, query });
   }
 
   /**
@@ -113,6 +116,7 @@ export function useRouterPush(inSetup = true) {
     routerBack,
     routerPushByKey,
     routerPushByKeyWithMetaQuery,
+    toHome,
     toLogin,
     toggleLoginModule,
     redirectFromLogin

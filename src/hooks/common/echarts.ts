@@ -137,11 +137,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
     Object.assign(chartOptions, updatedOpts);
 
-    if (isRendered()) {
-      chart?.clear();
-    }
-
-    chart?.setOption({ ...updatedOpts, backgroundColor: 'transparent' });
+    chart?.setOption({ ...updatedOpts, backgroundColor: 'transparent' }, { notMerge: true });
 
     await onUpdated?.(chart!);
   }
@@ -159,7 +155,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
       chart = echarts.init(domRef.value, chartTheme);
 
-      chart.setOption({ ...chartOptions, backgroundColor: 'transparent' });
+      chart.setOption({ ...chartOptions, backgroundColor: 'transparent' }, { notMerge: true });
 
       await onRender?.(chart);
     }

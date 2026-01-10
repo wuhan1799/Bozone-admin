@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 import { useEcharts } from '@/hooks/common/echarts';
 import { $t } from '@/locales';
@@ -24,8 +24,7 @@ const { domRef, updateOptions } = useEcharts(() => ({
   grid: {
     left: '3%',
     right: '4%',
-    bottom: '3%',
-    containLabel: true
+    bottom: '3%'
   },
   xAxis: {
     type: 'category',
@@ -94,7 +93,7 @@ const { domRef, updateOptions } = useEcharts(() => ({
       emphasis: {
         focus: 'series'
       },
-      data: []
+      data: [] as number[]
     }
   ]
 }));
@@ -105,9 +104,20 @@ async function mockData() {
   });
 
   updateOptions(opts => {
-    opts.xAxis.data = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'];
-    opts.series[0].data = [4623, 6145, 6268, 6411, 1890, 4251, 2978, 3880, 3606, 4311];
-    opts.series[1].data = [2208, 2016, 2916, 4512, 8281, 2008, 1963, 2367, 2956, 678];
+    (opts.xAxis as any).data = [
+      '06:00',
+      '08:00',
+      '10:00',
+      '12:00',
+      '14:00',
+      '16:00',
+      '18:00',
+      '20:00',
+      '22:00',
+      '24:00'
+    ];
+    (opts.series as any)[0].data = [4623, 6145, 6268, 6411, 1890, 4251, 2978, 3880, 3606, 4311];
+    (opts.series as any)[1].data = [2208, 2016, 2916, 4512, 8281, 2008, 1963, 2367, 2956, 678];
 
     return opts;
   });
@@ -117,9 +127,9 @@ function updateLocale() {
   updateOptions((opts, factory) => {
     const originOpts = factory();
 
-    opts.legend.data = originOpts.legend.data;
-    opts.series[0].name = originOpts.series[0].name;
-    opts.series[1].name = originOpts.series[1].name;
+    (opts.legend as any).data = (originOpts.legend as any).data;
+    (opts.series as any)[0].name = (originOpts.series as any)[0].name;
+    (opts.series as any)[1].name = (originOpts.series as any)[1].name;
 
     return opts;
   });
@@ -137,7 +147,9 @@ watch(
 );
 
 // init
-init();
+onMounted(() => {
+  init();
+});
 </script>
 
 <template>

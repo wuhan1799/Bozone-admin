@@ -57,8 +57,7 @@ export const lineOptions: ECOption = {
   grid: {
     left: '3%',
     right: '4%',
-    bottom: '3%',
-    containLabel: true
+    bottom: '3%'
   },
   toolbox: {
     feature: {

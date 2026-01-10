@@ -5,14 +5,26 @@ import { request } from '../request';
  *
  * @param userName User name
  * @param password Password
+ * @param [captchaCode] Image verification code
+ * @param [captchaKey] Captcha key
  */
-export function fetchLogin(userName: string, password: string) {
+// eslint-disable-next-line max-params
+export function fetchLogin(
+  userName: string,
+  password: string,
+  captchaCode: string = '',
+  captchaKey: string = '',
+  rememberMe: boolean = false
+) {
   return request<Api.Auth.LoginToken>({
     url: '/auth/login',
     method: 'post',
     data: {
       userName,
-      password
+      password,
+      captchaCode,
+      captchaKey,
+      rememberMe
     }
   });
 }
@@ -45,4 +57,9 @@ export function fetchRefreshToken(refreshToken: string) {
  */
 export function fetchCustomBackendError(code: string, msg: string) {
   return request({ url: '/auth/error', params: { code, msg } });
+}
+
+/** Logout */
+export function fetchLogout() {
+  return request<null>({ url: '/auth/logout', method: 'post', data: {} });
 }

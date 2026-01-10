@@ -27,8 +27,10 @@ const local: App.I18n.Schema = {
     error: '错误',
     index: '序号',
     keywordSearch: '请输入关键词搜索',
+    loading: '加载中...',
     logout: '退出登录',
     logoutConfirm: '确认退出登录吗？',
+    logoutFailed: '注销失败，请检查网络连接',
     lookForward: '敬请期待',
     modify: '修改',
     modifySuccess: '修改成功',
@@ -256,7 +258,9 @@ const local: App.I18n.Schema = {
         admin: '管理员',
         user: '普通用户',
         imgCode: '图片验证码',
-        imgCodePlaceholder: '请输入图片验证码'
+        imgCodePlaceholder: '请输入图片验证码',
+        refreshCaptcha: '刷新验证码',
+        captchaLoadError: '验证码加载失败'
       },
       codeLogin: {
         title: '验证码登录',

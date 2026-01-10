@@ -320,8 +320,10 @@ declare namespace App {
         error: string;
         index: string;
         keywordSearch: string;
+        loading: string;
         logout: string;
         logoutConfirm: string;
+        logoutFailed: string;
         lookForward: string;
         modify: string;
         modifySuccess: string;
@@ -444,6 +446,8 @@ declare namespace App {
             user: string;
             imgCode: string;
             imgCodePlaceholder: string;
+            refreshCaptcha: string;
+            captchaLoadError: string;
           };
           codeLogin: {
             title: string;

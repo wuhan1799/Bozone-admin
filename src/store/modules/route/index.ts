@@ -157,12 +157,18 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     if (authRouteMode.value === 'static') {
       addConstantRoutes(staticRoute.constantRoutes);
     } else {
-      const { data, error } = await fetchGetConstantRoutes();
+      try {
+        const { data, error } = await fetchGetConstantRoutes();
 
-      if (!error) {
-        addConstantRoutes(data);
-      } else {
-        // if fetch constant routes failed, use static constant routes
+        if (!error) {
+          addConstantRoutes(data);
+        } else {
+          // if fetch constant routes failed, use static constant routes
+          addConstantRoutes(staticRoute.constantRoutes);
+        }
+      } catch (err) {
+        // 捕获网络错误（如404、500等），使用静态路由降级
+        console.error('[initConstantRoute] 获取常量路由失败，使用静态路由:', err);
         addConstantRoutes(staticRoute.constantRoutes);
       }
     }

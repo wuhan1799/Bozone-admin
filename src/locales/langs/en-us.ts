@@ -27,8 +27,10 @@ const local: App.I18n.Schema = {
     error: 'Error',
     index: 'Index',
     keywordSearch: 'Please enter keyword',
+    loading: 'Loading...',
     logout: 'Logout',
     logoutConfirm: 'Are you sure you want to log out?',
+    logoutFailed: 'Logout failed, please check network connection',
     lookForward: 'Coming soon',
     modify: 'Modify',
     modifySuccess: 'Modify Success',
@@ -256,7 +258,9 @@ const local: App.I18n.Schema = {
         admin: 'Admin',
         user: 'User',
         imgCode: 'Image Code',
-        imgCodePlaceholder: 'Please enter image verification code'
+        imgCodePlaceholder: 'Please enter image verification code',
+        refreshCaptcha: 'Refresh Captcha',
+        captchaLoadError: 'Failed to load captcha'
       },
       codeLogin: {
         title: 'Verification Code Login',

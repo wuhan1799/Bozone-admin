@@ -85,19 +85,19 @@ export function getTabByRoute(route: App.Global.TabRoute) {
 }
 
 /**
- * The vue router will automatically merge the meta of all matched items, and the icons here may be affected by other
+ * The vue router will automatically merge% meta of all matched items, and icons here may be affected by other
  * matching items, so they need to be processed separately
  *
  * @param route
  */
 export function getRouteIcons(route: App.Global.TabRoute) {
-  // Set default value for icon at the beginning
+  // Set default value for icon at beginning
   let icon: string = route?.meta?.icon || import.meta.env.VITE_MENU_ICON;
   let localIcon: string | undefined = route?.meta?.localIcon;
 
   // Route.matched only appears when there are multiple matches,so check if route.matched exists
   if (route.matched) {
-    // Find the meta of the current route from matched
+    // Find the meta of current route from matched
     const currentRoute = route.matched.find(r => r.name === route.name);
     // If icon exists in currentRoute.meta, it will overwrite the default value
     icon = currentRoute?.meta?.icon || icon;
@@ -114,6 +114,17 @@ export function getRouteIcons(route: App.Global.TabRoute) {
  * @param homeRouteName routeHome in useRouteStore
  */
 export function getDefaultHomeTab(router: Router, homeRouteName: LastLevelRouteKey) {
+  if (!homeRouteName) {
+    // 如果 homeRouteName 为空，返回一个默认的首页标签
+    const defaultHomeTab: App.Global.Tab = {
+      id: '/home',
+      label: '首页',
+      routeKey: 'home' as LastLevelRouteKey,
+      routePath: '/home',
+      fullPath: '/home'
+    };
+    return defaultHomeTab;
+  }
   const homeRoutePath = getRoutePath(homeRouteName);
   const i18nLabel = $t(`route.${homeRouteName}`);
 

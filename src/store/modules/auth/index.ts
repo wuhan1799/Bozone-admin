@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { computed, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useLoading } from '@sa/hooks';
-import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { router } from '@/router';
+import { fetchGetUserInfo, fetchLogin, fetchLogout } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
@@ -12,11 +14,9 @@ import { useTabStore } from '../tab';
 import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
-  const route = useRoute();
-  const authStore = useAuthStore();
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
-  const { toLogin, redirectFromLogin } = useRouterPush(false);
+  const { toHome, toLogin } = useRouterPush(false);
   const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
   const token = ref(getToken());
@@ -42,16 +42,32 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function resetStore() {
     recordUserId();
 
-    clearAuthStorage();
-
-    authStore.$reset();
-
-    if (!route.meta.constant) {
-      await toLogin();
+    // 调用后端注销 API
+    try {
+      await fetchLogout();
+    } catch (error) {
+      // 注销失败，显示错误提示，保持登录状态
+      // eslint-disable-next-line no-console
+      console.error('Logout API failed:', error);
+      window.$message?.error?.($t('common.logoutFailed'));
+      return;
     }
 
-    tabStore.cacheTabs();
-    routeStore.resetStore();
+    // 成功后清理前端
+    clearAuthStorage();
+    // 手动重置状态
+    token.value = '';
+    Object.assign(userInfo, {
+      userId: '',
+      userName: '',
+      roles: [],
+      buttons: []
+    });
+    await tabStore.clearTabs();
+    await routeStore.resetStore();
+
+    // 直接跳转到登录页面，避免params处理正则表达式路径的问题
+    await toLogin();
   }
 
   /** Record the user ID of the previous login session Used to compare with the current user ID on next login */
@@ -92,13 +108,22 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
    *
    * @param userName User name
    * @param password Password
-   * @param [imgCode] Image verification code
+   * @param [captchaCode] Image verification code
+   * @param [captchaKey] Captcha key
    * @param [redirect=true] Whether to redirect after login. Default is `true`
    */
-  async function login(userName: string, password: string, imgCode?: string, redirect = true) {
+  // eslint-disable-next-line max-params
+  async function login(
+    userName: string,
+    password: string,
+    captchaCode: string = '',
+    captchaKey: string = '',
+    rememberMe: boolean = false,
+    redirect = true
+  ) {
     startLoading();
 
-    const { data: loginToken, error } = await fetchLogin(userName, password, imgCode);
+    const { data: loginToken, error } = await fetchLogin(userName, password, captchaCode, captchaKey, rememberMe);
 
     if (!error) {
       const pass = await loginByToken(loginToken);
@@ -112,7 +137,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
           // If the tab needs to be cleared,it means we don't need to redirect.
           needRedirect = false;
         }
-        await redirectFromLogin(needRedirect);
+        // 登录成功后跳转到首页
+        if (typeof toHome === 'function') {
+          await toHome();
+        } else {
+          // 后备方案：直接跳转到首页
+          console.warn('toHome is not a function, falling back to router.push');
+          await router.push('/');
+        }
 
         window.$notification?.success({
           title: $t('page.login.common.loginSuccess'),

@@ -4,8 +4,9 @@ import { loginModuleRecord } from '@/constants/app';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useForm, useFormRules } from '@/hooks/common/form';
+import { getServiceBaseURL } from '@/utils/service';
+import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
-import { getImageCaptcha } from '@/service-alova/api/auth';
 
 defineOptions({ name: 'PwdLogin' });
 
@@ -16,26 +17,43 @@ const { formRef, validate } = useForm();
 interface FormModel {
   userName: string;
   password: string;
-  imgCode: string;
+  captchaCode: string;
+  rememberMe?: boolean;
 }
 
 const model = ref<FormModel>({
   userName: '',
   password: '',
-  imgCode: ''
+  captchaCode: '',
+  rememberMe: false
 });
 
 const captchaUrl = ref('');
+const captchaKey = ref('');
 const captchaLoading = ref(false);
 
 async function loadCaptcha() {
   captchaLoading.value = true;
   try {
-    const blob = await getImageCaptcha();
+    const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
+    const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+
+    const response = await fetch(`${baseURL}/auth/captcha`, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    captchaKey.value = response.headers.get('X-Captcha-Key') || '';
+    const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     captchaUrl.value = url;
-  } catch {
-    window.$message?.error?.('加载验证码失败');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load captcha:', error);
+    window.$message?.error?.($t('page.login.pwdLogin.captchaLoadError'));
   } finally {
     captchaLoading.value = false;
   }
@@ -50,6 +68,13 @@ function refreshCaptcha() {
 
 onMounted(() => {
   loadCaptcha();
+  // 从本地存储读取记住的用户名和记住我状态
+  const rememberedUserName = localStg.get('rememberedUserName');
+  const rememberMe = localStg.get('rememberMe');
+  if (rememberedUserName) {
+    model.value.userName = rememberedUserName;
+    model.value.rememberMe = rememberMe === 'true';
+  }
 });
 
 const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
@@ -58,13 +83,28 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
   return {
     userName: formRules.userName,
     password: formRules.pwd,
-    imgCode: [{ required: true, message: $t('page.login.pwdLogin.imgCodePlaceholder') }]
+    captchaCode: [{ required: true, message: $t('page.login.pwdLogin.imgCodePlaceholder') }],
+    rememberMe: []
   };
 });
 
 async function handleSubmit() {
   await validate();
-  await authStore.login(model.value.userName, model.value.password, model.value.imgCode);
+  // 根据“记住我”复选框保存或移除用户名和记住我状态
+  if (model.value.rememberMe) {
+    localStg.set('rememberedUserName', model.value.userName);
+    localStg.set('rememberMe', 'true');
+  } else {
+    localStg.remove('rememberedUserName');
+    localStg.remove('rememberMe');
+  }
+  await authStore.login(
+    model.value.userName,
+    model.value.password,
+    model.value.captchaCode || '',
+    captchaKey.value || '',
+    model.value.rememberMe
+  );
 }
 </script>
 
@@ -81,33 +121,41 @@ async function handleSubmit() {
         :placeholder="$t('page.login.common.passwordPlaceholder')"
       />
     </ElFormItem>
-    <ElFormItem prop="imgCode">
+    <ElFormItem prop="captchaCode">
       <div class="w-full flex gap-12px">
-        <ElInput v-model="model.imgCode" :placeholder="$t('page.login.pwdLogin.imgCodePlaceholder')" />
-        <div class="captcha-img-wrapper" @click="refreshCaptcha">
-          <ElImage v-if="captchaUrl" :src="captchaUrl" fit="cover" :lazy="false" class="captcha-img">
+        <ElInput v-model="model.captchaCode" :placeholder="$t('page.login.pwdLogin.imgCodePlaceholder')" />
+        <div
+          class="captcha-img-wrapper"
+          role="button"
+          tabindex="0"
+          :aria-label="$t('page.login.pwdLogin.refreshCaptcha')"
+          @click="refreshCaptcha"
+          @keyup.enter="refreshCaptcha"
+        >
+          <ElImage v-if="captchaUrl" :src="captchaUrl" fit="contain" :lazy="false" class="captcha-img">
             <template #error>
               <div class="image-error">
-                <span>{{ captchaLoading ? '加载中...' : '点击刷新' }}</span>
+                <span>{{ captchaLoading ? $t('common.loading') : $t('page.login.pwdLogin.refreshCaptcha') }}</span>
               </div>
             </template>
           </ElImage>
           <div v-else class="image-error">
-            <span>{{ captchaLoading ? '加载中...' : '点击刷新' }}</span>
+            <span>{{ captchaLoading ? $t('common.loading') : $t('page.login.pwdLogin.refreshCaptcha') }}</span>
           </div>
         </div>
       </div>
     </ElFormItem>
     <ElSpace direction="vertical" :size="24" class="w-full" fill>
       <div class="flex-y-center justify-between">
-        <ElCheckbox>{{ $t('page.login.pwdLogin.rememberMe') }}</ElCheckbox>
-        <ElButton text @click="toggleLoginModule('reset-pwd')">
+        <ElCheckbox v-model="model.rememberMe">{{ $t('page.login.pwdLogin.rememberMe') }}</ElCheckbox>
+        <ElButton text type="primary" @click="toggleLoginModule('reset-pwd')">
           {{ $t('page.login.pwdLogin.forgetPassword') }}
         </ElButton>
       </div>
       <ElButton type="primary" size="large" round block :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </ElButton>
+      <!-- TODO: 临时隐藏，后续需要移除 hidden 类 -->
       <div class="hidden flex-y-center justify-between gap-12px">
         <ElButton class="flex-1" size="default" @click="toggleLoginModule('code-login')">
           {{ $t(loginModuleRecord['code-login']) }}
@@ -124,14 +172,17 @@ async function handleSubmit() {
 .captcha-img-wrapper {
   width: 100px;
   height: 40px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--el-border-color);
   border-radius: 4px;
   cursor: pointer;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f7fa;
+  /* 背景色跟随主题系统自动变化 */
+  background-color: rgb(var(--container-bg-color));
+  padding: 2px;
+  box-sizing: border-box;
 }
 
 .captcha-img {
@@ -146,8 +197,9 @@ async function handleSubmit() {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: #909399;
-  background-color: #f5f7fa;
+  /* 错误提示文字和背景都跟随主题 */
+  color: rgb(var(--base-text-color));
+  background-color: rgb(var(--container-bg-color));
 }
 </style>
 
