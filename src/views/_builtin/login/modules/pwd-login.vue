@@ -170,7 +170,7 @@ async function handleSubmit() {
 
 <style scoped>
 .captcha-img-wrapper {
-  width: 100px;
+  width: 160px;
   height: 40px;
   border: 1px solid var(--el-border-color);
   border-radius: 4px;

@@ -28,7 +28,7 @@ export const request = createFlatRequest(
       if (response.config.url === '/route/getUserRoutes' && response.data.data === undefined) {
         // 如果是 getUserRoutes 且 data 字段不存在，直接返回整个 response.data（去掉 code 和 message）
         // 这样可以保留 routes 和 home 字段
-        const { routes, home } = response.data;
+        const { routes, home } = response.data as unknown as Api.Route.UserRoute;
         return { routes, home };
       }
 
@@ -114,8 +114,8 @@ export const request = createFlatRequest(
 
       // get backend error message and code
       if (error.code === BACKEND_ERROR_CODE) {
-        message = error.response?.data?.msg || message;
-        backendErrorCode = String(error.response?.data?.code || '');
+        message = (error.response?.data as any)?.message || message;
+        backendErrorCode = String((error.response?.data as any)?.code || '');
       }
 
       // the error message is displayed in the modal

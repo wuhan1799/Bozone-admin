@@ -39,18 +39,20 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const isLogin = computed(() => Boolean(token.value));
 
   /** Reset auth store */
-  async function resetStore() {
+  async function resetStore(callLogoutApi = true) {
     recordUserId();
 
-    // 调用后端注销 API
-    try {
-      await fetchLogout();
-    } catch (error) {
-      // 注销失败，显示错误提示，保持登录状态
-      // eslint-disable-next-line no-console
-      console.error('Logout API failed:', error);
-      window.$message?.error?.($t('common.logoutFailed'));
-      return;
+    // 只在需要时调用后端注销API
+    if (callLogoutApi) {
+      try {
+        await fetchLogout();
+      } catch (error) {
+        // 注销失败，显示错误提示，保持登录状态
+        // eslint-disable-next-line no-console
+        console.error('Logout API failed:', error);
+        window.$message?.error?.($t('common.logoutFailed'));
+        return;
+      }
     }
 
     // 成功后清理前端
@@ -153,7 +155,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         });
       }
     } else {
-      resetStore();
+      resetStore(false);
     }
 
     endLoading();

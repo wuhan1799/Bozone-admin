@@ -1,10 +1,8 @@
 import { createAlovaRequest } from '@sa/alova';
-import { createAlovaMockAdapter } from '@sa/alova/mock';
 import adapterFetch from '@sa/alova/fetch';
 import { useAuthStore } from '@/store/modules/auth';
 import { getServiceBaseURL } from '@/utils/service';
 import { $t } from '@/locales';
-import featureUsers20241014 from '../mocks/feature-users-20241014';
 import { getAuthorization, handleRefreshToken, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
 
@@ -14,29 +12,17 @@ const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 const state: RequestInstanceState = {
   errMsgStack: []
 };
-const mockAdapter = createAlovaMockAdapter([featureUsers20241014], {
-  // using requestAdapter if not match mock request
-  httpAdapter: adapterFetch(),
-
-  // response delay time
-  delay: 1000,
-
-  // global mock toggle
-  enable: false,
-  matchMode: 'methodurl'
-});
 export const alova = createAlovaRequest(
   {
     baseURL,
     requestAdapter: adapterFetch()
   },
   {
-    onRequest({ config }) {
+    onRequest(methodInstance) {
+      const config = methodInstance.config;
       const Authorization = getAuthorization();
       config.headers.Authorization = Authorization;
       config.headers.apifoxToken = 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2';
-
-      return config;
     },
     tokenRefresher: {
       async isExpired(response) {
@@ -51,9 +37,8 @@ export const alova = createAlovaRequest(
     async isBackendSuccess(response) {
       // Check if response is a blob (image or binary data)
       const contentType = response.headers.get('content-type') || '';
-      const responseType = response.config?.responseType;
 
-      if (contentType.startsWith('image/') || contentType === 'application/octet-stream' || responseType === 'blob') {
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
         return true;
       }
 
@@ -67,7 +52,7 @@ export const alova = createAlovaRequest(
       // Check if response is a blob (image or binary data)
       const contentType = response.headers.get('content-type') || '';
 
-      if (contentType.startsWith('image/') || contentType === 'application/octet-stream' || response.config?.responseType === 'blob') {
+      if (contentType.startsWith('image/') || contentType === 'application/octet-stream') {
         return await response.blob();
       }
 
@@ -80,7 +65,7 @@ export const alova = createAlovaRequest(
       let responseCode = '';
       if (response) {
         const data = await response?.clone().json();
-        message = data.msg;
+        message = data.message;
         responseCode = String(data.code);
       }
 
