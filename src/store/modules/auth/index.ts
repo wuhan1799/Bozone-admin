@@ -125,40 +125,46 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   ) {
     startLoading();
 
-    const { data: loginToken, error } = await fetchLogin(userName, password, captchaCode, captchaKey, rememberMe);
+    try {
+      const { data: loginToken, error } = await fetchLogin(userName, password, captchaCode, captchaKey, rememberMe);
 
-    if (!error) {
-      const pass = await loginByToken(loginToken);
+      if (!error) {
+        const pass = await loginByToken(loginToken);
 
-      if (pass) {
-        // Check if the tab needs to be cleared
-        const isClear = checkTabClear();
-        let needRedirect = redirect;
+        if (pass) {
+          // Check if the tab needs to be cleared
+          const isClear = checkTabClear();
+          let needRedirect = redirect;
 
-        if (isClear) {
-          // If the tab needs to be cleared,it means we don't need to redirect.
-          needRedirect = false;
-        }
-        // 登录成功后跳转到首页
-        if (typeof toHome === 'function') {
-          await toHome();
+          if (isClear) {
+            // If the tab needs to be cleared,it means we don't need to redirect.
+            needRedirect = false;
+          }
+          // 登录成功后跳转到首页
+          if (typeof toHome === 'function') {
+            await toHome();
+          } else {
+            // 后备方案：直接跳转到首页
+            console.warn('toHome is not a function, falling back to router.push');
+            await router.push('/');
+          }
+
+          window.$notification?.success({
+            title: $t('page.login.common.loginSuccess'),
+            message: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
+            duration: 4500
+          });
         } else {
-          // 后备方案：直接跳转到首页
-          console.warn('toHome is not a function, falling back to router.push');
-          await router.push('/');
+          // loginByToken 失败，抛出错误
+          throw new Error('Failed to get user info');
         }
-
-        window.$notification?.success({
-          title: $t('page.login.common.loginSuccess'),
-          message: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
-          duration: 4500
-        });
+      } else {
+        // fetchLogin 失败，抛出错误
+        throw error;
       }
-    } else {
-      resetStore(false);
+    } finally {
+      endLoading();
     }
-
-    endLoading();
   }
 
   async function loginByToken(loginToken: Api.Auth.LoginToken) {

@@ -73,11 +73,29 @@ export function useRouterPush(inSetup = true) {
       }
     };
 
-    const redirect = redirectUrl || route.value.fullPath;
+    let redirect: string | undefined;
 
-    options.query = {
-      redirect
-    };
+    if (redirectUrl) {
+      // 如果提供了自定义的 redirectUrl，使用它
+      redirect = redirectUrl;
+    } else {
+      // 检查当前是否在登录页
+      const currentPath = route.value.path;
+      if (currentPath.startsWith('/login')) {
+        // 已经在登录页，不需要 redirect，避免URL嵌套
+        redirect = undefined;
+      } else {
+        // 不在登录页，使用当前完整路径作为 redirect
+        redirect = route.value.fullPath;
+      }
+    }
+
+    // 只在有 redirect 时才设置 query
+    if (redirect) {
+      options.query = {
+        redirect
+      };
+    }
 
     // 总是使用路径导航，避免路由检查问题
     const path = `/login/${module}`;

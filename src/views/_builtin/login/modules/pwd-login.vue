@@ -90,7 +90,7 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 
 async function handleSubmit() {
   await validate();
-  // 根据“记住我”复选框保存或移除用户名和记住我状态
+  // 根据"记住我"复选框保存或移除用户名和记住我状态
   if (model.value.rememberMe) {
     localStg.set('rememberedUserName', model.value.userName);
     localStg.set('rememberMe', 'true');
@@ -98,13 +98,22 @@ async function handleSubmit() {
     localStg.remove('rememberedUserName');
     localStg.remove('rememberMe');
   }
-  await authStore.login(
-    model.value.userName,
-    model.value.password,
-    model.value.captchaCode || '',
-    captchaKey.value || '',
-    model.value.rememberMe
-  );
+  try {
+    await authStore.login(
+      model.value.userName,
+      model.value.password,
+      model.value.captchaCode || '',
+      captchaKey.value || '',
+      model.value.rememberMe
+    );
+    // 登录成功，不需要刷新
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    // 登录失败，刷新验证码
+    refreshCaptcha();
+    // 清空验证码输入框
+    model.value.captchaCode = '';
+  }
 }
 </script>
 
