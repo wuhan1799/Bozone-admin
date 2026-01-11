@@ -107,6 +107,7 @@ async function handleSubmit() {
       model.value.rememberMe
     );
     // 登录成功，不需要刷新
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // 登录失败，刷新验证码
     refreshCaptcha();
