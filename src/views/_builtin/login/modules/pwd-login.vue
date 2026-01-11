@@ -89,16 +89,16 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 });
 
 async function handleSubmit() {
-  await validate();
-  // 根据"记住我"复选框保存或移除用户名和记住我状态
-  if (model.value.rememberMe) {
-    localStg.set('rememberedUserName', model.value.userName);
-    localStg.set('rememberMe', 'true');
-  } else {
-    localStg.remove('rememberedUserName');
-    localStg.remove('rememberMe');
-  }
   try {
+    await validate();
+    // 根据"记住我"复选框保存或移除用户名和记住我状态
+    if (model.value.rememberMe) {
+      localStg.set('rememberedUserName', model.value.userName);
+      localStg.set('rememberMe', 'true');
+    } else {
+      localStg.remove('rememberedUserName');
+      localStg.remove('rememberMe');
+    }
     await authStore.login(
       model.value.userName,
       model.value.password,
@@ -107,7 +107,6 @@ async function handleSubmit() {
       model.value.rememberMe
     );
     // 登录成功，不需要刷新
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // 登录失败，刷新验证码
     refreshCaptcha();
