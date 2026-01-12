@@ -12,6 +12,10 @@ declare namespace Env {
   interface ImportMeta {
     /** Whether the app is running in development mode */
     readonly DEV: boolean;
+    /** The current build mode */
+    readonly MODE: 'development' | 'production' | string;
+    /** Whether the app is running in production mode */
+    readonly PROD: boolean;
     /** The base url of application */
     readonly VITE_BASE_URL: string;
     /** The title of the application */
@@ -117,4 +121,20 @@ declare namespace Env {
 
 interface ImportMeta {
   readonly env: Env.ImportMeta;
+
+  /** Glob function for importing multiple files */
+  glob<E = string>(
+    pattern: string,
+    options?: {
+      query?: string;
+      import?: 'default' | 'url';
+      eager?: boolean;
+    }
+  ): Record<string, () => Promise<E>> | Record<string, E>;
+}
+
+/** SVG import with ?raw query */
+declare module '*.svg?raw' {
+  const content: string;
+  export default content;
 }

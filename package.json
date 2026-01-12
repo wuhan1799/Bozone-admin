@@ -37,6 +37,7 @@
     "commit:zh": "sa git-commit -l=zh-cn",
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
+    "gen-api": "orval",
     "gen-route": "sa gen-route",
     "lint": "eslint . --fix",
     "postbuild": "sa print-soybean",

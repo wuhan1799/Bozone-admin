@@ -168,7 +168,10 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         }
       } catch (err) {
         // 捕获网络错误（如404、500等），使用静态路由降级
-        console.error('[initConstantRoute] 获取常量路由失败，使用静态路由:', err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('[initConstantRoute] 获取常量路由失败，使用静态路由:', err);
+        }
         addConstantRoutes(staticRoute.constantRoutes);
       }
     }

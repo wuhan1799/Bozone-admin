@@ -38,7 +38,7 @@ async function loadCaptcha() {
     const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
     const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-    const response = await fetch(`${baseURL}/auth/captcha`, {
+    const response = await fetch(`${baseURL}/captcha/image`, {
       method: 'GET'
     });
 
@@ -46,7 +46,9 @@ async function loadCaptcha() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
+    // 从响应头获取captchaKey
     captchaKey.value = response.headers.get('X-Captcha-Key') || '';
+
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     captchaUrl.value = url;
