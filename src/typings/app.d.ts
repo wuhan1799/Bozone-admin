@@ -332,6 +332,7 @@ declare namespace App {
         pleaseCheckValue: string;
         refresh: string;
         reset: string;
+        save: string;
         search: string;
         switch: string;
         tip: string;
@@ -561,6 +562,33 @@ declare namespace App {
             stopRequest: string;
             requestCrossComponent: string;
             triggerAllRequest: string;
+          };
+        };
+        user: {
+          center: {
+            subtitle: string;
+            profile: string;
+            security: string;
+            username: string;
+            nickname: string;
+            gender: string;
+            phone: string;
+            email: string;
+            avatar: string;
+            oldPassword: string;
+            newPassword: string;
+            confirmPassword: string;
+            changePassword: string;
+            passwordChangeSuccess: string;
+            form: {
+              nickname: string;
+              gender: string;
+              phone: string;
+              email: string;
+              oldPassword: string;
+              newPassword: string;
+              confirmPassword: string;
+            };
           };
         };
         manage: {

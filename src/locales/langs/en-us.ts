@@ -39,6 +39,7 @@ const local: App.I18n.Schema = {
     pleaseCheckValue: 'Please check whether the value is valid',
     refresh: 'Refresh',
     reset: 'Reset',
+    save: 'Save',
     search: 'Search',
     switch: 'Switch',
     tip: 'Tip',
@@ -231,6 +232,33 @@ const local: App.I18n.Schema = {
     plugin_tables_vtable: 'VTable'
   },
   page: {
+    user: {
+      center: {
+        subtitle: 'Manage your personal information and security settings',
+        profile: 'Profile',
+        security: 'Security Settings',
+        username: 'Username',
+        nickname: 'Nickname',
+        gender: 'Gender',
+        phone: 'Phone',
+        email: 'Email',
+        avatar: 'Avatar',
+        oldPassword: 'Old Password',
+        newPassword: 'New Password',
+        confirmPassword: 'Confirm Password',
+        changePassword: 'Change Password',
+        passwordChangeSuccess: 'Password changed successfully, please login again',
+        form: {
+          nickname: 'Please enter nickname',
+          gender: 'Please select gender',
+          phone: 'Please enter phone number',
+          email: 'Please enter email',
+          oldPassword: 'Please enter old password',
+          newPassword: 'Please enter new password (6-20 characters)',
+          confirmPassword: 'Please enter new password again'
+        }
+      }
+    },
     login: {
       common: {
         loginOrRegister: 'Login / Register',

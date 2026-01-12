@@ -39,6 +39,7 @@ const local: App.I18n.Schema = {
     pleaseCheckValue: '请检查输入的值是否合法',
     refresh: '刷新',
     reset: '重置',
+    save: '保存',
     search: '搜索',
     switch: '切换',
     tip: '提示',
@@ -231,21 +232,48 @@ const local: App.I18n.Schema = {
     plugin_tables_vtable: 'VTable'
   },
   page: {
+    user: {
+      center: {
+        subtitle: '管理您的个人信息和安全设置',
+        profile: '个人信息',
+        security: '安全设置',
+        username: '用户名',
+        nickname: '昵称',
+        gender: '性别',
+        phone: '手机号',
+        email: '邮箱',
+        avatar: '头像',
+        oldPassword: '原密码',
+        newPassword: '新密码',
+        confirmPassword: '确认密码',
+        changePassword: '修改密码',
+        passwordChangeSuccess: '密码修改成功，请重新登录',
+        form: {
+          nickname: '请输入昵称',
+          gender: '请选择性别',
+          phone: '请输入手机号',
+          email: '请输入邮箱',
+          oldPassword: '请输入原密码',
+          newPassword: '请输入新密码（6-20位）',
+          confirmPassword: '请再次输入新密码'
+        }
+      }
+    },
     login: {
       common: {
-        loginOrRegister: '登录 / 注册',
+        loginOrRegister: '登录或注册',
         userNamePlaceholder: '请输入用户名',
         phonePlaceholder: '请输入手机号',
         emailPlaceholder: '请输入邮箱',
         codePlaceholder: '请输入验证码',
         passwordPlaceholder: '请输入密码',
-        confirmPasswordPlaceholder: '请再次输入密码',
+        confirmPasswordPlaceholder: '请确认密码',
         codeLogin: '验证码登录',
-        confirm: '确定',
+        confirm: '确认',
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来'
       },
       pwdLogin: {
         title: '密码登录',
