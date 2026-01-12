@@ -1,3 +1,4 @@
+import { useC3457fc283d3f681bee0df9c9a41350f } from '@/api/generated/邮件验证/邮件验证';
 import { request } from '../request';
 
 /**
@@ -62,4 +63,15 @@ export function fetchCustomBackendError(code: string, msg: string) {
 /** Logout */
 export function fetchLogout() {
   return request<null>({ url: '/auth/logout', method: 'post', data: {} });
+}
+
+/**
+ * Verify email code
+ *
+ * @param email Email address
+ * @param code Verification code
+ */
+export async function fetchVerifyEmailCode(email: string, code: string) {
+  const mutation = useC3457fc283d3f681bee0df9c9a41350f();
+  return mutation.mutateAsync({ data: { email, code } });
 }
