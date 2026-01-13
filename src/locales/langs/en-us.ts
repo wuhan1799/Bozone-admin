@@ -256,7 +256,8 @@ const local: App.I18n.Schema = {
           oldPassword: 'Please enter old password',
           newPassword: 'Please enter new password (6-20 characters)',
           confirmPassword: 'Please enter new password again'
-        }
+        },
+        uploadAvatar: 'Upload Avatar'
       }
     },
     login: {

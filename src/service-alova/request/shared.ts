@@ -5,6 +5,7 @@ import type { RequestInstanceState } from './type';
 
 export function getAuthorization() {
   const token = localStg.get('token');
+
   const Authorization = token ? `Bearer ${token}` : null;
 
   return Authorization;
@@ -15,6 +16,7 @@ export async function handleRefreshToken() {
   const { resetStore } = useAuthStore();
 
   const rToken = localStg.get('refreshToken') || '';
+
   const refreshTokenMethod = fetchRefreshToken(rToken);
 
   // set the refreshToken role, so that the request will not be intercepted
@@ -22,6 +24,7 @@ export async function handleRefreshToken() {
 
   try {
     const data = await refreshTokenMethod;
+
     localStg.set('token', data.token);
     localStg.set('refreshToken', data.refreshToken);
   } catch (error) {

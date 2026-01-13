@@ -1,4 +1,4 @@
-import { useC3457fc283d3f681bee0df9c9a41350f } from '@/api/generated/邮件验证/邮件验证';
+import { useC3457fc283d3f681bee0df9c9a41350f } from '@/api/generated/email/email';
 import { request } from '../request';
 
 /**

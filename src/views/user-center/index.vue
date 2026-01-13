@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+import { c3fa20709bb9358578c3d114f7a642c6 } from '@/api/generated/admin/admin';
+import type { C3fa20709bb9358578c3d114f7a642c6200Data } from '@/api/generated/index.schemas';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import { $t } from '@/locales';
 import ProfileDrawer from './modules/profile-drawer.vue';
 import PasswordDrawer from './modules/password-drawer.vue';
+import AvatarUploadDrawer from './modules/avatar-upload-drawer.vue';
 
 defineOptions({ name: 'UserCenter' });
 
@@ -12,8 +15,61 @@ const authStore = useAuthStore();
 const themeStore = useThemeStore();
 const profileDrawerVisible = ref(false);
 const passwordDrawerVisible = ref(false);
+const avatarUploadVisible = ref(false);
 
-function openProfileEdit() {
+// 获取用户详细信息
+const isLoading = ref(false);
+
+async function loadUserProfile() {
+  isLoading.value = true;
+  try {
+    const response = (await c3fa20709bb9358578c3d114f7a642c6()) as C3fa20709bb9358578c3d114f7a642c6200Data;
+    if (response) {
+      // 使用Object.assign一次性更新所有字段，确保响应式系统正常工作
+      // 注意：后端返回的字段名是nickname、realName、gender（小写）
+      // 前端store期望的字段名是nickName、userGender（驼峰命名）
+      // 处理头像URL，确保是完整地址
+      let avatar = '';
+      if (response.avatar) {
+        avatar = response.avatar.startsWith('http')
+          ? response.avatar
+          : `${import.meta.env.VITE_SERVICE_BASE_URL}${response.avatar}`;
+      }
+
+      // 使用Object.assign一次性更新所有字段，确保响应式系统正常工作
+      // 注意：后端返回的字段名是nickname、realName、gender（小写）
+      // 前端store期望的字段名是nickName、userGender（驼峰命名）
+      Object.assign(authStore.userInfo, {
+        userId: response.userId,
+        userName: response.userName,
+        userEmail: response.userEmail,
+        userPhone: response.userPhone,
+        avatar,
+        deptId: response.deptId,
+        deptName: response.deptName,
+        status: response.status,
+        createdAt: response.createdAt,
+        nickName: response.nickname,
+        realName: response.realName,
+        userGender: response.gender !== undefined && response.gender !== '' ? Number(response.gender) : undefined
+      });
+
+      // 触发组件重新渲染，确保UI更新
+      await nextTick();
+    } else {
+      // 用户资料响应为空
+    }
+  } catch (error) {
+    window.$message?.error((error as any)?.message || '获取用户信息失败');
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+async function openProfileEdit() {
+  // 先获取最新用户信息
+  await loadUserProfile();
+  // 然后打开抽屉
   profileDrawerVisible.value = true;
 }
 
@@ -21,11 +77,21 @@ function openPasswordEdit() {
   passwordDrawerVisible.value = true;
 }
 
+function openAvatarUpload() {
+  avatarUploadVisible.value = true;
+}
+
 function getGenderLabel() {
   if (authStore.userInfo.userGender === 1) return '男';
   if (authStore.userInfo.userGender === 2) return '女';
   return '未设置';
 }
+
+// 页面挂载时初始化一次用户信息
+onMounted(() => {
+  // 总是获取最新用户信息，确保显示最新数据
+  loadUserProfile();
+});
 </script>
 
 <template>
@@ -45,7 +111,7 @@ function getGenderLabel() {
                   <SvgIcon icon="ph:user" class="text-48px text-white" />
                 </div>
               </div>
-              <ElButton class="avatar-edit" type="primary" size="small" circle>
+              <ElButton class="avatar-edit" type="primary" size="small" circle @click="openAvatarUpload">
                 <SvgIcon icon="ph:camera" />
               </ElButton>
             </div>
@@ -138,6 +204,33 @@ function getGenderLabel() {
                     {{ authStore.userInfo.userEmail || '-' }}
                   </div>
                 </div>
+                <div class="info-item">
+                  <div class="info-label text-color-secondary mb-8px text-14px">
+                    <SvgIcon icon="ph:buildings" class="mr-6px" />
+                    部门
+                  </div>
+                  <div class="info-value text-16px text-color-primary font-medium">
+                    {{ authStore.userInfo.deptName || authStore.userInfo.deptId || '-' }}
+                  </div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label text-color-secondary mb-8px text-14px">
+                    <SvgIcon icon="ph:check-circle" class="mr-6px" />
+                    状态
+                  </div>
+                  <div class="info-value text-16px text-color-primary font-medium">
+                    {{ authStore.userInfo.status === 1 ? '启用' : authStore.userInfo.status === 0 ? '禁用' : '-' }}
+                  </div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label text-color-secondary mb-8px text-14px">
+                    <SvgIcon icon="ph:calendar" class="mr-6px" />
+                    创建时间
+                  </div>
+                  <div class="info-value text-16px text-color-primary font-medium">
+                    {{ authStore.userInfo.createdAt || '-' }}
+                  </div>
+                </div>
               </div>
             </div>
           </ElCard>
@@ -180,10 +273,13 @@ function getGenderLabel() {
     </ElRow>
 
     <!-- 编辑个人信息抽屉 -->
-    <ProfileDrawer v-model:visible="profileDrawerVisible" />
+    <ProfileDrawer v-model:visible="profileDrawerVisible" @success="loadUserProfile" />
 
     <!-- 修改密码抽屉 -->
     <PasswordDrawer v-model:visible="passwordDrawerVisible" />
+
+    <!-- 上传头像抽屉 -->
+    <AvatarUploadDrawer v-model:visible="avatarUploadVisible" @success="loadUserProfile" />
   </div>
 </template>
 
@@ -232,6 +328,7 @@ function getGenderLabel() {
 
       .bg-linear-to-r {
         position: relative;
+        z-index: 0;
         background: linear-gradient(135deg, #00b08d 0%, #00b08d 80%);
 
         &::before {
@@ -256,6 +353,7 @@ function getGenderLabel() {
       display: inline-block;
       margin-top: -50px;
       margin-bottom: 12px;
+      pointer-events: auto;
 
       .avatar-wrapper {
         width: 100px;
@@ -290,6 +388,8 @@ function getGenderLabel() {
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 10;
+        cursor: pointer;
       }
     }
 

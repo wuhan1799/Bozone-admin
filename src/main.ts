@@ -6,7 +6,8 @@ import {
   setupIconifyOffline,
   setupLoading,
   setupNProgress,
-  setupUI
+  setupUI,
+  setupVueQuery
 } from './plugins';
 import { setupStore } from './store';
 import { setupRouter } from './router';
@@ -23,6 +24,8 @@ async function setupApp() {
   setupDayjs();
 
   const app = createApp(App);
+
+  setupVueQuery(app);
 
   setupUI(app);
 

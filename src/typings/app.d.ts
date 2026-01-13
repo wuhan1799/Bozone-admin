@@ -589,6 +589,7 @@ declare namespace App {
               newPassword: string;
               confirmPassword: string;
             };
+            uploadAvatar: string;
           };
         };
         manage: {

@@ -52,9 +52,7 @@ async function loadCaptcha() {
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     captchaUrl.value = url;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to load captcha:', error);
+  } catch {
     window.$message?.error?.($t('page.login.pwdLogin.captchaLoadError'));
   } finally {
     captchaLoading.value = false;
@@ -93,6 +91,7 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 async function handleSubmit() {
   try {
     await validate();
+
     // 根据"记住我"复选框保存或移除用户名和记住我状态
     if (model.value.rememberMe) {
       localStg.set('rememberedUserName', model.value.userName);
@@ -101,6 +100,13 @@ async function handleSubmit() {
       localStg.remove('rememberedUserName');
       localStg.remove('rememberMe');
     }
+
+    if (!captchaKey.value) {
+      window.$message?.error?.('验证码Key获取失败，请刷新页面重试');
+      refreshCaptcha();
+      return;
+    }
+
     await authStore.login(
       model.value.userName,
       model.value.password,
@@ -143,7 +149,12 @@ async function handleSubmit() {
           @click="refreshCaptcha"
           @keyup.enter="refreshCaptcha"
         >
-          <ElImage v-if="captchaUrl" :src="captchaUrl" fit="contain" :lazy="false" class="captcha-img">
+          <ElImage
+            v-if="captchaUrl"
+            :src="captchaUrl"
+            class="captcha-img"
+            :title="$t('page.login.pwdLogin.refreshCaptcha')"
+          >
             <template #error>
               <div class="image-error">
                 <span>{{ captchaLoading ? $t('common.loading') : $t('page.login.pwdLogin.refreshCaptcha') }}</span>
@@ -181,8 +192,10 @@ async function handleSubmit() {
 
 <style scoped>
 .captcha-img-wrapper {
-  width: 160px;
-  height: 40px;
+  width: 124px;
+  min-width: 124px;
+  height: 32px;
+  min-height: 32px;
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
   cursor: pointer;
@@ -193,12 +206,25 @@ async function handleSubmit() {
   /* 背景色跟随主题系统自动变化 */
   background-color: rgb(var(--container-bg-color));
   padding: 2px;
-  box-sizing: border-box;
+  box-sizing: content-box;
+  flex-shrink: 0;
 }
 
-.captcha-img {
+.captcha-img-wrapper :deep(.el-image) {
   width: 100%;
   height: 100%;
+}
+
+.captcha-img-wrapper :deep(.el-image__inner) {
+  width: 100%;
+  height: 100%;
+}
+
+.captcha-img-wrapper :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
 }
 
 .image-error {

@@ -24,6 +24,16 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const userInfo: Api.Auth.UserInfo = reactive({
     userId: '',
     userName: '',
+    nickName: '',
+    realName: '',
+    userGender: undefined as number | undefined,
+    userPhone: '',
+    userEmail: '',
+    avatar: '',
+    deptId: '',
+    deptName: '',
+    status: undefined as number | undefined,
+    createdAt: '',
     roles: [],
     buttons: []
   });
@@ -62,6 +72,16 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     Object.assign(userInfo, {
       userId: '',
       userName: '',
+      nickName: '',
+      realName: '',
+      userGender: undefined as number | undefined,
+      userPhone: '',
+      userEmail: '',
+      avatar: '',
+      deptId: '',
+      deptName: '',
+      status: undefined as number | undefined,
+      createdAt: '',
       roles: [],
       buttons: []
     });

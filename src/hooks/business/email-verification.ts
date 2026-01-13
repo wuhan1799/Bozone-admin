@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { useCountDown, useLoading } from '@sa/hooks';
 import { REG_EMAIL } from '@/constants/reg';
-import { useOp331d0cc4dbe99449d67d209c0de4264b } from '@/api/generated/邮件验证/邮件验证';
+import { useOp331d0cc4dbe99449d67d209c0de4264b } from '@/api/generated/email/email';
 
 export function useEmailVerification() {
   const { loading, startLoading, endLoading } = useLoading();

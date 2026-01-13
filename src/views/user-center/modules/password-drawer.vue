@@ -2,6 +2,8 @@
 <!-- eslint-disable no-warning-comments -->
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useOp088c8b1984022f043150763386148f29 } from '@/api/generated/admin/admin';
+import type { Op088c8b1984022f043150763386148f29Body } from '@/api/generated/index.schemas';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import { useForm, useFormRules } from '@/hooks/common/form';
@@ -27,41 +29,56 @@ const { toLogin } = useRouterPush();
 const { formRef, validate, restoreValidation } = useForm();
 const { patternRules, createConfirmPwdRule } = useFormRules();
 
+const drawerVisible = computed({
+  get: () => props.visible,
+  set: (value: boolean) => emit('update:visible', value)
+});
+
 const model = ref({
   oldPassword: '',
   newPassword: '',
   confirmPassword: ''
 });
 
-const rules = {
+const rules = computed(() => ({
   oldPassword: [patternRules.pwd],
   newPassword: [patternRules.pwd],
   confirmPassword: createConfirmPwdRule(model.value.newPassword)
-};
+}));
 
-const drawerVisible = computed({
-  get: () => props.visible,
-  set: (value: boolean) => emit('update:visible', value)
+// 修改密码 API
+const changePasswordMutation = useOp088c8b1984022f043150763386148f29({
+  mutation: {
+    onSuccess: () => {
+      window.$message?.success($t('page.user.center.passwordChangeSuccess'));
+
+      // 清空表单
+      restoreValidation();
+      drawerVisible.value = false;
+
+      // 重新登录
+      setTimeout(async () => {
+        await authStore.resetStore(false);
+        toLogin();
+      }, 1000);
+    },
+    onError: (error: any) => {
+      window.$message?.error(error?.message || '修改密码失败');
+    }
+  }
 });
 
 async function handleChangePassword() {
   try {
     await validate();
 
-    // TODO: 调用后端API修改密码
-    // await fetchChangePassword(model.value);
+    const passwordData: Op088c8b1984022f043150763386148f29Body = {
+      oldPassword: model.value.oldPassword,
+      newPassword: model.value.newPassword,
+      confirmPassword: model.value.confirmPassword
+    };
 
-    window.$message?.success($t('page.user.center.passwordChangeSuccess'));
-
-    // 清空表单
-    restoreValidation();
-    drawerVisible.value = false;
-
-    // 重新登录
-    setTimeout(async () => {
-      await authStore.resetStore(false);
-      toLogin();
-    }, 1000);
+    await changePasswordMutation.mutateAsync({ data: passwordData });
   } catch (error) {
     console.error('Change password failed:', error);
   }
@@ -104,8 +121,10 @@ async function handleChangePassword() {
     </ElForm>
     <template #footer>
       <div class="flex justify-end gap-12px">
-        <ElButton @click="drawerVisible = false">{{ $t('common.cancel') }}</ElButton>
-        <ElButton type="primary" @click="handleChangePassword">
+        <ElButton :loading="changePasswordMutation.isPending.value" @click="drawerVisible = false">
+          {{ $t('common.cancel') }}
+        </ElButton>
+        <ElButton type="primary" :loading="changePasswordMutation.isPending.value" @click="handleChangePassword">
           {{ $t('page.user.center.changePassword') }}
         </ElButton>
       </div>

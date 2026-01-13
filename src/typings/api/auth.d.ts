@@ -21,6 +21,10 @@ declare namespace Api {
       userGender?: number;
       userPhone?: string;
       userEmail?: string;
+      deptId?: string;
+      deptName?: string;
+      status?: number;
+      createdAt?: string;
     }
   }
 }

@@ -23,12 +23,19 @@ export const alova = createAlovaRequest(
       const Authorization = getAuthorization();
       config.headers.Authorization = Authorization;
       config.headers.apifoxToken = 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2';
+      // 如果 data 是 FormData，移除 Content-Type header（包括大小写），让浏览器自动设置
+      if (methodInstance.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+        delete config.headers['content-type'];
+      }
     },
     tokenRefresher: {
-      async isExpired(response) {
-        const expiredTokenCodes = import.meta.env.VITE_SERVICE_EXPIRED_TOKEN_CODES?.split(',') || [];
-        const { code } = await response.clone().json();
-        return expiredTokenCodes.includes(String(code));
+      async isExpired(_response) {
+        // 临时禁用刷新token功能，因为后端端点可能不存在
+        return false;
+        // const expiredTokenCodes = import.meta.env.VITE_SERVICE_EXPIRED_TOKEN_CODES?.split(',') || [];
+        // const { code } = await response.clone().json();
+        // return expiredTokenCodes.includes(String(code));
       },
       async handler() {
         await handleRefreshToken();
@@ -46,7 +53,8 @@ export const alova = createAlovaRequest(
       // to change this logic by yourself, you can modify the `VITE_SERVICE_SUCCESS_CODE` in `.env` file
       const resp = response.clone();
       const data = await resp.json();
-      return String(data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
+      const isSuccess = String(data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
+      return isSuccess;
     },
     async transformBackendResponse(response) {
       // Check if response is a blob (image or binary data)
@@ -64,9 +72,14 @@ export const alova = createAlovaRequest(
       let message = error.message;
       let responseCode = '';
       if (response) {
-        const data = await response?.clone().json();
-        message = data.message;
-        responseCode = String(data.code);
+        try {
+          const data = await response?.clone().json();
+          message = data.message || error.message;
+          responseCode = String(data.code);
+        } catch {
+          // 如果解析 JSON 失败，使用原始错误消息
+          message = error.message;
+        }
       }
 
       function handleLogout() {

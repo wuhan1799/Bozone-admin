@@ -1,8 +1,13 @@
 <!-- eslint-disable no-console -->
 <!-- eslint-disable no-warning-comments -->
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { userGenderOptions } from '@/constants/business';
+import { c3fa20709bb9358578c3d114f7a642c6, useOp6d91d776e12e7eb2a5bd798356f92e8d } from '@/api/generated/admin/admin';
+import type {
+  C3fa20709bb9358578c3d114f7a642c6200Data,
+  Op6d91d776e12e7eb2a5bd798356f92e8dBody
+} from '@/api/generated/index.schemas';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import { useForm, useFormRules } from '@/hooks/common/form';
@@ -16,6 +21,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:visible', value: boolean): void;
+  (e: 'success'): void;
 }
 
 const props = defineProps<Props>();
@@ -26,36 +32,105 @@ const themeStore = useThemeStore();
 const { formRef, validate, restoreValidation } = useForm();
 const { patternRules } = useFormRules();
 
-const model = ref({
-  nickname: '',
-  gender: undefined as number | undefined,
-  phone: '',
-  email: '',
-  avatar: '',
-  realName: ''
-});
-
-type RuleKey = Extract<keyof typeof model.value, 'phone' | 'email'>;
-
-const rules = computed<Record<RuleKey, App.Global.FormRule>>(() => {
-  return {
-    phone: patternRules.phone,
-    email: patternRules.email
-  };
-});
-
 const drawerVisible = computed({
   get: () => props.visible,
   set: value => emit('update:visible', value)
 });
 
+const model = ref({
+  nickname: '',
+  gender: undefined as string | undefined,
+  phone: '',
+  email: '',
+  realName: ''
+});
+
+// 更新个人信息 API
+const updateProfileMutation = useOp6d91d776e12e7eb2a5bd798356f92e8d({
+  mutation: {
+    onSuccess: async () => {
+      // 先使用表单数据乐观更新
+      authStore.userInfo.nickName = model.value.nickname;
+      authStore.userInfo.userGender = model.value.gender !== undefined ? Number(model.value.gender) : undefined;
+      authStore.userInfo.userEmail = model.value.email;
+      authStore.userInfo.userPhone = model.value.phone;
+
+      // 等待 Vue 更新完成
+      await nextTick();
+
+      // 然后从后端获取最新用户信息
+      try {
+        const response = (await c3fa20709bb9358578c3d114f7a642c6()) as C3fa20709bb9358578c3d114f7a642c6200Data;
+        if (response) {
+          // 更新本地store
+          let avatar = '';
+          if (response.avatar) {
+            avatar = response.avatar.startsWith('http')
+              ? response.avatar
+              : `${import.meta.env.VITE_SERVICE_BASE_URL}${response.avatar}`;
+          }
+          Object.assign(authStore.userInfo, {
+            userId: response.userId,
+            userName: response.userName,
+            userEmail: response.userEmail,
+            userPhone: response.userPhone,
+            avatar,
+            deptId: response.deptId,
+            deptName: response.deptName,
+            status: response.status,
+            createdAt: response.createdAt,
+            nickName: response.nickname,
+            realName: response.realName,
+            userGender: response.gender !== undefined && response.gender !== '' ? Number(response.gender) : undefined
+          });
+
+          // 等待 Vue 更新完成
+          await nextTick();
+        }
+      } catch (error) {
+        console.error('获取最新用户信息失败:', error);
+        // 获取失败不影响用户体验，因为已经做了乐观更新
+      }
+
+      window.$message?.success($t('common.updateSuccess'));
+
+      drawerVisible.value = false;
+      emit('success');
+    },
+    onError: (error: any) => {
+      window.$message?.error(error?.message || '更新失败');
+    }
+  }
+});
+
+type RuleKey = Extract<keyof typeof model.value, 'nickname' | 'phone' | 'email'>;
+
+const rules = computed(() => {
+  return {
+    nickname: [
+      {
+        required: false,
+        trigger: 'blur',
+        validator: (_rule: any, value: any, callback: any) => {
+          if (value && value.length > 50) {
+            callback(new Error('昵称不能超过50个字符'));
+          } else {
+            callback();
+          }
+        }
+      }
+    ] as any,
+    phone: patternRules.phone,
+    email: patternRules.email
+  };
+}) as unknown as Record<RuleKey, App.Global.FormRule>;
+
 function loadUserData() {
   model.value = {
     nickname: authStore.userInfo.nickName || '',
-    gender: authStore.userInfo.userGender || undefined,
+    gender: authStore.userInfo.userGender !== undefined ? String(authStore.userInfo.userGender) : undefined,
     phone: authStore.userInfo.userPhone || '',
     email: authStore.userInfo.userEmail || '',
-    avatar: authStore.userInfo.avatar || '',
     realName: authStore.userInfo.userName || ''
   };
 }
@@ -63,27 +138,19 @@ function loadUserData() {
 async function handleSave() {
   try {
     await validate();
-    // TODO: 调用后端API保存用户信息
-    // await fetchUpdateUserInfo(model.value);
 
-    // 更新本地store
-    authStore.userInfo.nickName = model.value.nickname;
-    authStore.userInfo.userGender = model.value.gender;
-    authStore.userInfo.userPhone = model.value.phone;
-    authStore.userInfo.userEmail = model.value.email;
-    authStore.userInfo.avatar = model.value.avatar;
+    // 调用后端API保存用户信息
+    const updateData: Op6d91d776e12e7eb2a5bd798356f92e8dBody = {
+      nickname: model.value.nickname || undefined,
+      gender: model.value.gender,
+      userEmail: model.value.email || undefined,
+      userPhone: model.value.phone || undefined
+    };
 
-    window.$message?.success($t('common.updateSuccess'));
-    drawerVisible.value = false;
+    await updateProfileMutation.mutateAsync({ data: updateData });
   } catch (error) {
     console.error('Save profile failed:', error);
   }
-}
-
-function handleAvatarUpload(file: File) {
-  // TODO: 实现头像上传
-  console.log('Upload avatar:', file);
-  model.value.avatar = URL.createObjectURL(file);
 }
 
 watch(
@@ -124,22 +191,13 @@ watch(
       <ElFormItem :label="$t('page.user.center.email')" prop="email">
         <ElInput v-model="model.email" :placeholder="$t('page.user.center.form.email')" />
       </ElFormItem>
-      <ElFormItem :label="$t('page.user.center.avatar')">
-        <ElUpload
-          class="avatar-uploader"
-          :show-file-list="false"
-          :on-change="(file: any) => handleAvatarUpload(file.raw)"
-          accept="image/*"
-        >
-          <img v-if="model.avatar" :src="model.avatar" class="avatar" />
-          <ElIcon v-else class="avatar-uploader-icon"><Plus /></ElIcon>
-        </ElUpload>
-      </ElFormItem>
     </ElForm>
     <template #footer>
       <div class="flex justify-end gap-12px">
-        <ElButton @click="drawerVisible = false">{{ $t('common.cancel') }}</ElButton>
-        <ElButton type="primary" @click="handleSave">
+        <ElButton :loading="updateProfileMutation.isPending.value" @click="drawerVisible = false">
+          {{ $t('common.cancel') }}
+        </ElButton>
+        <ElButton type="primary" :loading="updateProfileMutation.isPending.value" @click="handleSave">
           {{ $t('common.save') }}
         </ElButton>
       </div>
@@ -148,35 +206,6 @@ watch(
 </template>
 
 <style scoped>
-.avatar-uploader {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-  background-color: var(--el-bg-color);
-}
-
-.avatar-uploader:hover {
-  border-color: var(--el-color-primary);
-}
-
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: var(--el-text-color-secondary);
-  width: 100px;
-  height: 100px;
-  text-align: center;
-  line-height: 100px;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  display: block;
-}
-
 /* 暗色模式适配 */
 :deep(.dark-drawer) {
   .el-drawer__body {
