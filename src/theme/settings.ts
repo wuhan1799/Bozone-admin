@@ -1,14 +1,14 @@
 /** Default theme settings */
 export const themeSettings: App.Theme.ThemeSetting = {
-  themeScheme: 'light',
+  themeScheme: 'auto',
   grayscale: false,
   colourWeakness: false,
-  recommendColor: false,
+  recommendColor: true,
   themeColor: '#00b08d',
   otherColor: {
     info: '#2080f0',
-    success: '#52c41a',
-    warning: '#fc0404',
+    success: '#ca7d35',
+    warning: '#eab308',
     error: '#f5222d'
   },
   isInfoFollowPrimary: true,
