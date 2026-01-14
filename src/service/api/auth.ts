@@ -1,4 +1,4 @@
-import { useC3457fc283d3f681bee0df9c9a41350f } from '@/api/generated/email/email';
+import { useOp331d0cc4dbe99449d67d209c0de4264b } from '@/api/generated/email/email';
 import { request } from '../request';
 
 /**
@@ -71,7 +71,7 @@ export function fetchLogout() {
  * @param email Email address
  * @param code Verification code
  */
-export async function fetchVerifyEmailCode(email: string, code: string) {
-  const mutation = useC3457fc283d3f681bee0df9c9a41350f();
-  return mutation.mutateAsync({ data: { email, code } });
+export async function fetchVerifyEmailCode(email: string) {
+  const mutation = useOp331d0cc4dbe99449d67d209c0de4264b();
+  return mutation.mutateAsync({ data: { email } });
 }

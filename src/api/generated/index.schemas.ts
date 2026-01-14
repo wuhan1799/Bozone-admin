@@ -28,19 +28,6 @@ export type Op331d0cc4dbe99449d67d209c0de4264b200 = {
   message?: string;
 };
 
-export type C3457fc283d3f681bee0df9c9a41350fBody = {
-  /** 邮箱地址 */
-  email: string;
-  /** 验证码 */
-  code: string;
-};
-
-export type C3457fc283d3f681bee0df9c9a41350f200 = {
-  code?: string;
-  message?: string;
-  valid?: boolean;
-};
-
 export type Op8c8bacf6f81bff1dcdff8224cab42b0cBody = {
   /** 邮箱地址 */
   email: string;
@@ -110,6 +97,17 @@ export type Op1fb1c01c673ae0146d10e9dda005c769200 = {
 export type Dd96e80426ed79d2d5e742eaeff442f0200Data = {
   userId?: string;
   userName?: string;
+  nickname?: string;
+  realName?: string;
+  gender?: string;
+  userEmail?: string;
+  userPhone?: string;
+  avatar?: string;
+  deptId?: string;
+  deptName?: string;
+  status?: number;
+  remark?: string;
+  createdAt?: string;
   roles?: string[];
   buttons?: string[];
 };
@@ -143,28 +141,6 @@ export type A9bab906594ff1aaa5af1492cde9d252200 = {
   message?: string;
   routes?: A9bab906594ff1aaa5af1492cde9d252200RoutesItem[];
   home?: string;
-};
-
-export type C3fa20709bb9358578c3d114f7a642c6200Data = {
-  userId?: string;
-  userName?: string;
-  nickname?: string;
-  realName?: string;
-  gender?: string;
-  userEmail?: string;
-  userPhone?: string;
-  avatar?: string;
-  deptId?: string;
-  deptName?: string;
-  status?: number;
-  remark?: string;
-  createdAt?: string;
-};
-
-export type C3fa20709bb9358578c3d114f7a642c6200 = {
-  code?: string;
-  message?: string;
-  data?: C3fa20709bb9358578c3d114f7a642c6200Data;
 };
 
 export type Op6d91d776e12e7eb2a5bd798356f92e8dBody = {

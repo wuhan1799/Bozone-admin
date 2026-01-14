@@ -30,7 +30,6 @@ import type {
 
 import type {
   A9bab906594ff1aaa5af1492cde9d252200,
-  C3fa20709bb9358578c3d114f7a642c6200,
   Dd96e80426ed79d2d5e742eaeff442f0200,
   Op088c8b1984022f043150763386148f29200,
   Op088c8b1984022f043150763386148f29Body,
@@ -178,7 +177,7 @@ export const useOp1fb1c01c673ae0146d10e9dda005c769 = <TError = void,
       return useMutation(mutationOptions, queryClient);
     }
     /**
- * 获取当前登录用户的详细信息
+ * 获取当前登录用户的完整信息，包括个人资料、角色和按钮权限
  * @summary 获取用户信息
  */
 export const dd96e80426ed79d2d5e742eaeff442f0 = (
@@ -373,75 +372,6 @@ export function useA9bab906594ff1aaa5af1492cde9d252<TData = Awaited<ReturnType<t
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getA9bab906594ff1aaa5af1492cde9d252QueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-/**
- * 获取当前登录用户的详细信息
- * @summary 获取个人信息
- */
-export const c3fa20709bb9358578c3d114f7a642c6 = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return apiAlova<C3fa20709bb9358578c3d114f7a642c6200>(
-      {url: `/user/profile`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
-
-export const getC3fa20709bb9358578c3d114f7a642c6QueryKey = () => {
-    return [
-    'user','profile'
-    ] as const;
-    }
-
-    
-export const getC3fa20709bb9358578c3d114f7a642c6QueryOptions = <TData = Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getC3fa20709bb9358578c3d114f7a642c6QueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>> = ({ signal }) => c3fa20709bb9358578c3d114f7a642c6(signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>, TError, TData> 
-}
-
-export type C3fa20709bb9358578c3d114f7a642c6QueryResult = NonNullable<Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>>
-export type C3fa20709bb9358578c3d114f7a642c6QueryError = void
-
-
-/**
- * @summary 获取个人信息
- */
-
-export function useC3fa20709bb9358578c3d114f7a642c6<TData = Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>, TError = void>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof c3fa20709bb9358578c3d114f7a642c6>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getC3fa20709bb9358578c3d114f7a642c6QueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

@@ -3,11 +3,8 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import { userGenderOptions } from '@/constants/business';
-import { c3fa20709bb9358578c3d114f7a642c6, useOp6d91d776e12e7eb2a5bd798356f92e8d } from '@/api/generated/admin/admin';
-import type {
-  C3fa20709bb9358578c3d114f7a642c6200Data,
-  Op6d91d776e12e7eb2a5bd798356f92e8dBody
-} from '@/api/generated/index.schemas';
+import { dd96e80426ed79d2d5e742eaeff442f0, useOp6d91d776e12e7eb2a5bd798356f92e8d } from '@/api/generated/admin/admin';
+import type { Op6d91d776e12e7eb2a5bd798356f92e8dBody } from '@/api/generated/index.schemas';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import { useForm, useFormRules } from '@/hooks/common/form';
@@ -60,28 +57,40 @@ const updateProfileMutation = useOp6d91d776e12e7eb2a5bd798356f92e8d({
 
       // 然后从后端获取最新用户信息
       try {
-        const response = (await c3fa20709bb9358578c3d114f7a642c6()) as C3fa20709bb9358578c3d114f7a642c6200Data;
-        if (response) {
+        const response = await dd96e80426ed79d2d5e742eaeff442f0();
+        if (response.data) {
+          const {
+            userId,
+            userName,
+            nickname,
+            realName,
+            gender,
+            userEmail,
+            userPhone,
+            avatar,
+            deptId,
+            deptName,
+            status,
+            createdAt
+          } = response.data;
           // 更新本地store
-          let avatar = '';
-          if (response.avatar) {
-            avatar = response.avatar.startsWith('http')
-              ? response.avatar
-              : `${import.meta.env.VITE_SERVICE_BASE_URL}${response.avatar}`;
+          let avatarUrl = '';
+          if (avatar) {
+            avatarUrl = avatar.startsWith('http') ? avatar : `${import.meta.env.VITE_SERVICE_BASE_URL}${avatar}`;
           }
           Object.assign(authStore.userInfo, {
-            userId: response.userId,
-            userName: response.userName,
-            userEmail: response.userEmail,
-            userPhone: response.userPhone,
-            avatar,
-            deptId: response.deptId,
-            deptName: response.deptName,
-            status: response.status,
-            createdAt: response.createdAt,
-            nickName: response.nickname,
-            realName: response.realName,
-            userGender: response.gender !== undefined && response.gender !== '' ? Number(response.gender) : undefined
+            userId: userId || '',
+            userName: userName || '',
+            userEmail: userEmail || '',
+            userPhone: userPhone || '',
+            avatar: avatarUrl,
+            deptId: deptId || '',
+            deptName: deptName || '',
+            status,
+            createdAt: createdAt || '',
+            nickName: nickname || '',
+            realName: realName || '',
+            userGender: gender !== undefined && gender !== '' ? Number(gender) : undefined
           });
 
           // 等待 Vue 更新完成

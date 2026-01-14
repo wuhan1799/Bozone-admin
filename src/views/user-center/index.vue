@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue';
-import { c3fa20709bb9358578c3d114f7a642c6 } from '@/api/generated/admin/admin';
-import type { C3fa20709bb9358578c3d114f7a642c6200Data } from '@/api/generated/index.schemas';
+import { dd96e80426ed79d2d5e742eaeff442f0 } from '@/api/generated/admin/admin';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import { $t } from '@/locales';
@@ -23,35 +22,45 @@ const isLoading = ref(false);
 async function loadUserProfile() {
   isLoading.value = true;
   try {
-    const response = (await c3fa20709bb9358578c3d114f7a642c6()) as C3fa20709bb9358578c3d114f7a642c6200Data;
-    if (response) {
-      // 使用Object.assign一次性更新所有字段，确保响应式系统正常工作
-      // 注意：后端返回的字段名是nickname、realName、gender（小写）
-      // 前端store期望的字段名是nickName、userGender（驼峰命名）
+    const response = await dd96e80426ed79d2d5e742eaeff442f0();
+    if (response.data) {
+      const {
+        userId,
+        userName,
+        nickname,
+        realName,
+        gender,
+        userEmail,
+        userPhone,
+        avatar,
+        deptId,
+        deptName,
+        status,
+        createdAt
+      } = response.data;
+
       // 处理头像URL，确保是完整地址
-      let avatar = '';
-      if (response.avatar) {
-        avatar = response.avatar.startsWith('http')
-          ? response.avatar
-          : `${import.meta.env.VITE_SERVICE_BASE_URL}${response.avatar}`;
+      let avatarUrl = '';
+      if (avatar) {
+        avatarUrl = avatar.startsWith('http') ? avatar : `${import.meta.env.VITE_SERVICE_BASE_URL}${avatar}`;
       }
 
       // 使用Object.assign一次性更新所有字段，确保响应式系统正常工作
       // 注意：后端返回的字段名是nickname、realName、gender（小写）
       // 前端store期望的字段名是nickName、userGender（驼峰命名）
       Object.assign(authStore.userInfo, {
-        userId: response.userId,
-        userName: response.userName,
-        userEmail: response.userEmail,
-        userPhone: response.userPhone,
-        avatar,
-        deptId: response.deptId,
-        deptName: response.deptName,
-        status: response.status,
-        createdAt: response.createdAt,
-        nickName: response.nickname,
-        realName: response.realName,
-        userGender: response.gender !== undefined && response.gender !== '' ? Number(response.gender) : undefined
+        userId: userId || '',
+        userName: userName || '',
+        userEmail: userEmail || '',
+        userPhone: userPhone || '',
+        avatar: avatarUrl,
+        deptId: deptId || '',
+        deptName: deptName || '',
+        status,
+        createdAt: createdAt || '',
+        nickName: nickname || '',
+        realName: realName || '',
+        userGender: gender !== undefined && gender !== '' ? Number(gender) : undefined
       });
 
       // 触发组件重新渲染，确保UI更新

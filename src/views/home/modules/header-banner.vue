@@ -11,6 +11,17 @@ const authStore = useAuthStore();
 
 const gap = computed(() => (appStore.isMobile ? 0 : 16));
 
+// 头像 URL 计算属性
+const avatarUrl = computed(() => {
+  const avatar = authStore.userInfo.avatar;
+  if (!avatar) return ''; // 为空时返回空，模板显示默认头像
+  if (avatar.startsWith('http')) {
+    return avatar;
+  }
+  // 如果是相对路径，拼接后端基础 URL
+  return `${import.meta.env.VITE_SERVICE_BASE_URL}${avatar}`;
+});
+
 interface StatisticData {
   id: number;
   title: string;
@@ -30,7 +41,8 @@ const statisticData = computed<StatisticData[]>(() => [
       <ElCol :md="18" :sm="24">
         <div class="flex-y-center">
           <div class="size-72px shrink-0 overflow-hidden rd-1/2">
-            <img src="@/assets/imgs/soybean.jpg" class="size-full" />
+            <img v-if="avatarUrl" :src="avatarUrl" class="size-full" alt="用户头像" />
+            <img v-else src="@/assets/imgs/soybean.jpg" class="size-full" alt="默认头像" />
           </div>
           <div class="pl-12px">
             <h3 class="text-18px font-semibold">
