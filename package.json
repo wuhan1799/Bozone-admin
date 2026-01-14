@@ -33,7 +33,7 @@
     "build": "vite build --mode prod",
     "build:test": "vite build --mode test",
     "cleanup": "sa cleanup",
-    "commit": "sa git-commit",
+    "commit": "pnpm exec cz",
     "commit:zh": "sa git-commit -l=zh-cn",
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
@@ -113,8 +113,10 @@
     "@vitejs/plugin-vue": "6.0.1",
     "@vitejs/plugin-vue-jsx": "5.1.1",
     "consola": "3.4.2",
+    "cz-conventional-changelog-zh": "^0.0.2",
     "eslint": "9.34.0",
     "eslint-plugin-vue": "10.4.0",
+    "git-cz": "^4.9.0",
     "kolorist": "1.8.0",
     "orval": "^7.18.0",
     "sass": "1.91.0",
@@ -133,6 +135,11 @@
   "simple-git-hooks": {
     "commit-msg": "pnpm sa git-commit-verify",
     "pre-commit": "pnpm typecheck && pnpm lint && git diff --exit-code"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog-zh"
+    }
   },
   "website": "https://elp.soybeanjs.cn"
 }
