@@ -8,4 +8,6 @@ export interface RequestMeta {
   authRole?: 'none' | 'accessToken' | 'refreshToken';
   /** is blob response */
   isBlob?: boolean;
+  /** 自定义错误消息（替代全局错误提示） */
+  customErrorMsg?: string;
 }

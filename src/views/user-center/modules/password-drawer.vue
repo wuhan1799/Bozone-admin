@@ -61,9 +61,6 @@ const changePasswordMutation = useOp088c8b1984022f043150763386148f29({
         await authStore.resetStore(false);
         toLogin();
       }, 1000);
-    },
-    onError: (error: any) => {
-      window.$message?.error(error?.message || '修改密码失败');
     }
   }
 });
@@ -80,7 +77,10 @@ async function handleChangePassword() {
 
     await changePasswordMutation.mutateAsync({ data: passwordData });
   } catch (error) {
-    console.error('Change password failed:', error);
+    // 只在开发环境输出到控制台，生产环境不暴露具体错误信息
+    if (import.meta.env.DEV) {
+      console.error('Change password failed:', error);
+    }
   }
 }
 </script>

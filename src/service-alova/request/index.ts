@@ -71,14 +71,29 @@ export const alova = createAlovaRequest(
 
       let message = error.message;
       let responseCode = '';
+      let requestUrl = '';
+
       if (response) {
         try {
           const data = await response?.clone().json();
           message = data.message || error.message;
           responseCode = String(data.code);
+          requestUrl = response.url || '';
         } catch {
           // 如果解析 JSON 失败，使用原始错误消息
           message = error.message;
+          requestUrl = response.url || '';
+        }
+      }
+
+      // 对于特定的请求，使用自定义的错误消息
+      const customErrorMessages: Record<string, string> = {
+        '/user/changePassword': '修改密码失败'
+      };
+      for (const [urlPart, customMsg] of Object.entries(customErrorMessages)) {
+        if (requestUrl.includes(urlPart)) {
+          message = customMsg;
+          break;
         }
       }
 
@@ -123,6 +138,7 @@ export const alova = createAlovaRequest(
         }
         throw error;
       }
+
       showErrorMsg(state, message);
       throw error;
     }
