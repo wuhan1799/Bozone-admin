@@ -58,7 +58,7 @@ const updateProfileMutation = useOp6d91d776e12e7eb2a5bd798356f92e8d({
       // 然后从后端获取最新用户信息
       try {
         const response = await dd96e80426ed79d2d5e742eaeff442f0();
-        if (response.data) {
+        if (response?.data) {
           const {
             userId,
             userName,

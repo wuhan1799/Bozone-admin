@@ -23,7 +23,8 @@ async function loadUserProfile() {
   isLoading.value = true;
   try {
     const response = await dd96e80426ed79d2d5e742eaeff442f0();
-    if (response.data) {
+
+    if (response?.data) {
       const {
         userId,
         userName,

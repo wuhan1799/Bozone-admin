@@ -207,9 +207,25 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function getUserInfo() {
     const { data: info, error } = await fetchGetUserInfo();
 
-    if (!error) {
+    if (!error && info) {
+      // 处理头像 URL
+      let avatarUrl = '';
+      if (info.avatar) {
+        avatarUrl = info.avatar.startsWith('http')
+          ? info.avatar
+          : `${import.meta.env.VITE_SERVICE_BASE_URL}${info.avatar}`;
+      }
+
       // update store
-      Object.assign(userInfo, info);
+      Object.assign(userInfo, {
+        ...info,
+        avatar: avatarUrl,
+        nickName: (info as any).nickname || info.nickName || '',
+        userGender:
+          (info as any).gender !== undefined && (info as any).gender !== ''
+            ? Number((info as any).gender)
+            : info.userGender
+      });
 
       return true;
     }
