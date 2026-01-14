@@ -5,9 +5,10 @@
  * 后台管理系统API接口文档，包括认证管理、路由管理、个人中心等功能
  * OpenAPI spec version: 1.0.0
  */
-import { unref } from 'vue';
-import type { MaybeRef } from 'vue';
-import { useMutation, useQuery } from '@tanstack/vue-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/vue-query';
 import type {
   DataTag,
   MutationFunction,
@@ -19,147 +20,157 @@ import type {
   UseQueryOptions,
   UseQueryReturnType
 } from '@tanstack/vue-query';
-import type { Op2d0185429a70cd12a9905648721a9166200, Op2d0185429a70cd12a9905648721a9166Body } from '../index.schemas';
+
+import {
+  unref
+} from 'vue';
+import type {
+  MaybeRef
+} from 'vue';
+
+import type {
+  Op2d0185429a70cd12a9905648721a9166200,
+  Op2d0185429a70cd12a9905648721a9166Body
+} from '../index.schemas';
+
 import { apiAlova } from '../../../service-alova/request/orval-instance';
+
+
+
 
 /**
  * 生成并返回验证码图片，响应头中包含验证码Key
  * @summary 获取验证码图片
  */
-export const Op1b6b57af8001909481816181efbf0817 = (signal?: AbortSignal) => {
-  return apiAlova<Blob>({ url: `/captcha/image`, method: 'GET', responseType: 'blob', signal });
-};
+export const Op1b6b57af8001909481816181efbf0817 = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return apiAlova<Blob>(
+      {url: `/captcha/image`, method: 'GET',
+        responseType: 'blob', signal
+    },
+      );
+    }
+  
+
+
 
 export const getOp1b6b57af8001909481816181efbf0817QueryKey = () => {
-  return ['captcha', 'image'] as const;
-};
+    return [
+    'captcha','image'
+    ] as const;
+    }
 
-export const getOp1b6b57af8001909481816181efbf0817QueryOptions = <
-  TData = Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>,
-  TError = void
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError, TData>>;
-}) => {
-  const { query: queryOptions } = options ?? {};
+    
+export const getOp1b6b57af8001909481816181efbf0817QueryOptions = <TData = Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError, TData>>, }
+) => {
 
-  const queryKey = getOp1b6b57af8001909481816181efbf0817QueryKey();
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>> = ({ signal }) =>
-    Op1b6b57af8001909481816181efbf0817(signal);
+  const queryKey =  getOp1b6b57af8001909481816181efbf0817QueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>,
-    TError,
-    TData
-  >;
-};
+  
 
-export type Op1b6b57af8001909481816181efbf0817QueryResult = NonNullable<
-  Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>
->;
-export type Op1b6b57af8001909481816181efbf0817QueryError = void;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>> = ({ signal }) => Op1b6b57af8001909481816181efbf0817(signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError, TData> 
+}
+
+export type Op1b6b57af8001909481816181efbf0817QueryResult = NonNullable<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>>
+export type Op1b6b57af8001909481816181efbf0817QueryError = void
+
 
 /**
  * @summary 获取验证码图片
  */
 
-export function useOp1b6b57af8001909481816181efbf0817<
-  TData = Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>,
-  TError = void
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError, TData>>;
-  },
-  queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getOp1b6b57af8001909481816181efbf0817QueryOptions(options);
+export function useOp1b6b57af8001909481816181efbf0817<TData = Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1b6b57af8001909481816181efbf0817>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getOp1b6b57af8001909481816181efbf0817QueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
 
   return query;
 }
 
+
+
+
 /**
  * 验证用户输入的验证码是否正确
  * @summary 验证验证码
  */
 export const Op2d0185429a70cd12a9905648721a9166 = (
-  op2d0185429a70cd12a9905648721a9166Body: MaybeRef<Op2d0185429a70cd12a9905648721a9166Body>,
-  signal?: AbortSignal
+    op2d0185429a70cd12a9905648721a9166Body: MaybeRef<Op2d0185429a70cd12a9905648721a9166Body>,
+ signal?: AbortSignal
 ) => {
-  op2d0185429a70cd12a9905648721a9166Body = unref(op2d0185429a70cd12a9905648721a9166Body);
+      op2d0185429a70cd12a9905648721a9166Body = unref(op2d0185429a70cd12a9905648721a9166Body);
+      
+      return apiAlova<Op2d0185429a70cd12a9905648721a9166200>(
+      {url: `/captcha/verify`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: op2d0185429a70cd12a9905648721a9166Body, signal
+    },
+      );
+    }
+  
 
-  return apiAlova<Op2d0185429a70cd12a9905648721a9166200>({
-    url: `/captcha/verify`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: op2d0185429a70cd12a9905648721a9166Body,
-    signal
-  });
-};
 
-export const getOp2d0185429a70cd12a9905648721a9166MutationOptions = <TError = void, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
-    TError,
-    { data: Op2d0185429a70cd12a9905648721a9166Body },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
-  TError,
-  { data: Op2d0185429a70cd12a9905648721a9166Body },
-  TContext
-> => {
-  const mutationKey = ['op2d0185429a70cd12a9905648721a9166'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+export const getOp2d0185429a70cd12a9905648721a9166MutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>, TError,{data: Op2d0185429a70cd12a9905648721a9166Body}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>, TError,{data: Op2d0185429a70cd12a9905648721a9166Body}, TContext> => {
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
-    { data: Op2d0185429a70cd12a9905648721a9166Body }
-  > = props => {
-    const { data } = props ?? {};
+const mutationKey = ['op2d0185429a70cd12a9905648721a9166'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-    return Op2d0185429a70cd12a9905648721a9166(data);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type Op2d0185429a70cd12a9905648721a9166MutationResult = NonNullable<
-  Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>
->;
-export type Op2d0185429a70cd12a9905648721a9166MutationBody = Op2d0185429a70cd12a9905648721a9166Body;
-export type Op2d0185429a70cd12a9905648721a9166MutationError = void;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>, {data: Op2d0185429a70cd12a9905648721a9166Body}> = (props) => {
+          const {data} = props ?? {};
 
-/**
+          return  Op2d0185429a70cd12a9905648721a9166(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type Op2d0185429a70cd12a9905648721a9166MutationResult = NonNullable<Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>>
+    export type Op2d0185429a70cd12a9905648721a9166MutationBody = Op2d0185429a70cd12a9905648721a9166Body
+    export type Op2d0185429a70cd12a9905648721a9166MutationError = void
+
+    /**
  * @summary 验证验证码
  */
-export const useOp2d0185429a70cd12a9905648721a9166 = <TError = void, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
-      TError,
-      { data: Op2d0185429a70cd12a9905648721a9166Body },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient
-): UseMutationReturnType<
-  Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
-  TError,
-  { data: Op2d0185429a70cd12a9905648721a9166Body },
-  TContext
-> => {
-  const mutationOptions = getOp2d0185429a70cd12a9905648721a9166MutationOptions(options);
+export const useOp2d0185429a70cd12a9905648721a9166 = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>, TError,{data: Op2d0185429a70cd12a9905648721a9166Body}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof Op2d0185429a70cd12a9905648721a9166>>,
+        TError,
+        {data: Op2d0185429a70cd12a9905648721a9166Body},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
+      const mutationOptions = getOp2d0185429a70cd12a9905648721a9166MutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    

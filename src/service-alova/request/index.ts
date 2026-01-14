@@ -64,7 +64,9 @@ export const alova = createAlovaRequest(
         return await response.blob();
       }
 
-      return (await response.clone().json()).data;
+      const jsonData = await response.clone().json();
+      // 如果有 data 字段就返回 data，否则返回整个响应（包含 message）
+      return jsonData.data !== undefined ? jsonData.data : jsonData;
     },
     async onError(error, response) {
       const authStore = useAuthStore();

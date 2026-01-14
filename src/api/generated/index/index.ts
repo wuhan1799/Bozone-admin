@@ -5,9 +5,9 @@
  * 后台管理系统API接口文档，包括认证管理、路由管理、个人中心等功能
  * OpenAPI spec version: 1.0.0
  */
-import { computed, unref } from 'vue';
-import type { MaybeRef } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
+import {
+  useQuery
+} from '@tanstack/vue-query';
 import type {
   DataTag,
   QueryClient,
@@ -16,133 +16,159 @@ import type {
   UseQueryOptions,
   UseQueryReturnType
 } from '@tanstack/vue-query';
-import type { Op1187fb2693828a5dca015015a85e4e37200 } from '../index.schemas';
+
+import {
+  computed,
+  unref
+} from 'vue';
+import type {
+  MaybeRef
+} from 'vue';
+
+import type {
+  Op1187fb2693828a5dca015015a85e4e37200
+} from '../index.schemas';
+
 import { apiAlova } from '../../../service-alova/request/orval-instance';
+
+
+
 
 /**
  * 返回API管理系统首页HTML页面
  * @summary 首页
  */
-export const Op96a9eb5bbcecff8b3b5acbf88883aaab = (signal?: AbortSignal) => {
-  return apiAlova<string>({ url: `/`, method: 'GET', signal });
-};
+export const Op96a9eb5bbcecff8b3b5acbf88883aaab = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return apiAlova<string>(
+      {url: `/`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
 
 export const getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryKey = () => {
-  return [] as const;
-};
+    return [
+    
+    ] as const;
+    }
 
-export const getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryOptions = <
-  TData = Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>,
-  TError = unknown
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError, TData>>;
-}) => {
-  const { query: queryOptions } = options ?? {};
+    
+export const getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryOptions = <TData = Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError, TData>>, }
+) => {
 
-  const queryKey = getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryKey();
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>> = ({ signal }) =>
-    Op96a9eb5bbcecff8b3b5acbf88883aaab(signal);
+  const queryKey =  getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>,
-    TError,
-    TData
-  >;
-};
+  
 
-export type Op96a9eb5bbcecff8b3b5acbf88883aaabQueryResult = NonNullable<
-  Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>
->;
-export type Op96a9eb5bbcecff8b3b5acbf88883aaabQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>> = ({ signal }) => Op96a9eb5bbcecff8b3b5acbf88883aaab(signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError, TData> 
+}
+
+export type Op96a9eb5bbcecff8b3b5acbf88883aaabQueryResult = NonNullable<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>>
+export type Op96a9eb5bbcecff8b3b5acbf88883aaabQueryError = unknown
+
 
 /**
  * @summary 首页
  */
 
-export function useOp96a9eb5bbcecff8b3b5acbf88883aaab<
-  TData = Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>,
-  TError = unknown
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError, TData>>;
-  },
-  queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryOptions(options);
+export function useOp96a9eb5bbcecff8b3b5acbf88883aaab<TData = Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op96a9eb5bbcecff8b3b5acbf88883aaab>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getOp96a9eb5bbcecff8b3b5acbf88883aaabQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
 
   return query;
 }
+
+
+
 
 /**
  * 根据名称返回问候语
  * @summary 问候接口
  */
-export const Op1187fb2693828a5dca015015a85e4e37 = (name: MaybeRef<string> = 'ThinkPHP8', signal?: AbortSignal) => {
-  name = unref(name);
-
-  return apiAlova<Op1187fb2693828a5dca015015a85e4e37200>({ url: `/hello/${name}`, method: 'GET', signal });
-};
-
-export const getOp1187fb2693828a5dca015015a85e4e37QueryKey = (name: MaybeRef<string> = 'ThinkPHP8') => {
-  return ['hello', name] as const;
-};
-
-export const getOp1187fb2693828a5dca015015a85e4e37QueryOptions = <
-  TData = Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>,
-  TError = unknown
->(
-  name: MaybeRef<string> = 'ThinkPHP8',
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError, TData>>;
-  }
+export const Op1187fb2693828a5dca015015a85e4e37 = (
+    name: MaybeRef<string> =  'ThinkPHP8',
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      name = unref(name);
+      
+      return apiAlova<Op1187fb2693828a5dca015015a85e4e37200>(
+      {url: `/hello/${name}`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey = getOp1187fb2693828a5dca015015a85e4e37QueryKey(name);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>> = ({ signal }) =>
-    Op1187fb2693828a5dca015015a85e4e37(name, signal);
 
-  return { queryKey, queryFn, enabled: computed(() => Boolean(unref(name))), ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>,
-    TError,
-    TData
-  >;
-};
+export const getOp1187fb2693828a5dca015015a85e4e37QueryKey = (name: MaybeRef<string>=  'ThinkPHP8',) => {
+    return [
+    'hello',name
+    ] as const;
+    }
 
-export type Op1187fb2693828a5dca015015a85e4e37QueryResult = NonNullable<
-  Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>
->;
-export type Op1187fb2693828a5dca015015a85e4e37QueryError = unknown;
+    
+export const getOp1187fb2693828a5dca015015a85e4e37QueryOptions = <TData = Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError = unknown>(name: MaybeRef<string> =  'ThinkPHP8', options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getOp1187fb2693828a5dca015015a85e4e37QueryKey(name);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>> = ({ signal }) => Op1187fb2693828a5dca015015a85e4e37(name, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(name))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError, TData> 
+}
+
+export type Op1187fb2693828a5dca015015a85e4e37QueryResult = NonNullable<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>>
+export type Op1187fb2693828a5dca015015a85e4e37QueryError = unknown
+
 
 /**
  * @summary 问候接口
  */
 
-export function useOp1187fb2693828a5dca015015a85e4e37<
-  TData = Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>,
-  TError = unknown
->(
-  name: MaybeRef<string> = 'ThinkPHP8',
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError, TData>>;
-  },
-  queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getOp1187fb2693828a5dca015015a85e4e37QueryOptions(name, options);
+export function useOp1187fb2693828a5dca015015a85e4e37<TData = Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError = unknown>(
+ name: MaybeRef<string> =  'ThinkPHP8', options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof Op1187fb2693828a5dca015015a85e4e37>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getOp1187fb2693828a5dca015015a85e4e37QueryOptions(name,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
 
   return query;
 }
+
+
+
+

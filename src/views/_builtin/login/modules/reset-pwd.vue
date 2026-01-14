@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { REG_EMAIL } from '@/constants/reg';
+import { Op331d0cc4dbe99449d67d209c0de4264b, Op8c8bacf6f81bff1dcdff8224cab42b0c } from '@/api/generated/email/email';
 import { useRouterPush } from '@/hooks/common/router';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { useCaptcha } from '@/hooks/business/captcha';
-import { sendEmailCaptcha } from '@/service-alova/api/auth';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ResetPwd' });
@@ -53,16 +53,22 @@ async function handleGetCode() {
   }
 
   try {
-    await sendEmailCaptcha(email);
-    window.$message?.success($t('page.login.codeLogin.sendCodeSuccess'));
+    const result = await Op331d0cc4dbe99449d67d209c0de4264b({ email });
+    window.$message?.success(result.message);
     useCaptcha().start();
   } catch {}
 }
 
 async function handleSubmit() {
   await validate();
-  // request to reset password
-  window.$message?.success($t('page.login.common.validateSuccess'));
+  try {
+    const result = await Op8c8bacf6f81bff1dcdff8224cab42b0c({
+      email: model.value.email,
+      code: model.value.code,
+      newPassword: model.value.password
+    });
+    window.$message?.success(result.message);
+  } catch {}
 }
 </script>
 

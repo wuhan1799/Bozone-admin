@@ -41,6 +41,20 @@ export type C3457fc283d3f681bee0df9c9a41350f200 = {
   valid?: boolean;
 };
 
+export type Op8c8bacf6f81bff1dcdff8224cab42b0cBody = {
+  /** 邮箱地址 */
+  email: string;
+  /** 验证码 */
+  code: string;
+  /** 新密码（6-32位，包含字母和数字） */
+  newPassword: string;
+};
+
+export type Op8c8bacf6f81bff1dcdff8224cab42b0c200 = {
+  code?: string;
+  message?: string;
+};
+
 export type Op8b542536d9ff60b7a22bf31fcf6ce559Body = {
   /** 手机号码 */
   phone: string;
@@ -207,3 +221,4 @@ export type Op1a23e1e7f8a8fb791561ec987c7dc9d6200 = {
 export type Op1187fb2693828a5dca015015a85e4e37200 = {
   message?: string;
 };
+

@@ -5,175 +5,230 @@
  * 后台管理系统API接口文档，包括认证管理、路由管理、个人中心等功能
  * OpenAPI spec version: 1.0.0
  */
-import { unref } from 'vue';
-import type { MaybeRef } from 'vue';
-import { useMutation } from '@tanstack/vue-query';
-import type { MutationFunction, QueryClient, UseMutationOptions, UseMutationReturnType } from '@tanstack/vue-query';
+import {
+  useMutation
+} from '@tanstack/vue-query';
+import type {
+  MutationFunction,
+  QueryClient,
+  UseMutationOptions,
+  UseMutationReturnType
+} from '@tanstack/vue-query';
+
+import {
+  unref
+} from 'vue';
+import type {
+  MaybeRef
+} from 'vue';
+
 import type {
   C3457fc283d3f681bee0df9c9a41350f200,
   C3457fc283d3f681bee0df9c9a41350fBody,
   Op331d0cc4dbe99449d67d209c0de4264b200,
-  Op331d0cc4dbe99449d67d209c0de4264bBody
+  Op331d0cc4dbe99449d67d209c0de4264bBody,
+  Op8c8bacf6f81bff1dcdff8224cab42b0c200,
+  Op8c8bacf6f81bff1dcdff8224cab42b0cBody
 } from '../index.schemas';
+
 import { apiAlova } from '../../../service-alova/request/orval-instance';
+
+
+
 
 /**
  * 向指定邮箱发送验证码邮件
  * @summary 发送邮件验证码
  */
 export const Op331d0cc4dbe99449d67d209c0de4264b = (
-  op331d0cc4dbe99449d67d209c0de4264bBody: MaybeRef<Op331d0cc4dbe99449d67d209c0de4264bBody>,
-  signal?: AbortSignal
+    op331d0cc4dbe99449d67d209c0de4264bBody: MaybeRef<Op331d0cc4dbe99449d67d209c0de4264bBody>,
+ signal?: AbortSignal
 ) => {
-  op331d0cc4dbe99449d67d209c0de4264bBody = unref(op331d0cc4dbe99449d67d209c0de4264bBody);
+      op331d0cc4dbe99449d67d209c0de4264bBody = unref(op331d0cc4dbe99449d67d209c0de4264bBody);
+      
+      return apiAlova<Op331d0cc4dbe99449d67d209c0de4264b200>(
+      {url: `/email/sendVerifyCode`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: op331d0cc4dbe99449d67d209c0de4264bBody, signal
+    },
+      );
+    }
+  
 
-  return apiAlova<Op331d0cc4dbe99449d67d209c0de4264b200>({
-    url: `/email/sendVerifyCode`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: op331d0cc4dbe99449d67d209c0de4264bBody,
-    signal
-  });
-};
 
-export const getOp331d0cc4dbe99449d67d209c0de4264bMutationOptions = <TError = void, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
-    TError,
-    { data: Op331d0cc4dbe99449d67d209c0de4264bBody },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
-  TError,
-  { data: Op331d0cc4dbe99449d67d209c0de4264bBody },
-  TContext
-> => {
-  const mutationKey = ['op331d0cc4dbe99449d67d209c0de4264b'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+export const getOp331d0cc4dbe99449d67d209c0de4264bMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>, TError,{data: Op331d0cc4dbe99449d67d209c0de4264bBody}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>, TError,{data: Op331d0cc4dbe99449d67d209c0de4264bBody}, TContext> => {
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
-    { data: Op331d0cc4dbe99449d67d209c0de4264bBody }
-  > = props => {
-    const { data } = props ?? {};
+const mutationKey = ['op331d0cc4dbe99449d67d209c0de4264b'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-    return Op331d0cc4dbe99449d67d209c0de4264b(data);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type Op331d0cc4dbe99449d67d209c0de4264bMutationResult = NonNullable<
-  Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>
->;
-export type Op331d0cc4dbe99449d67d209c0de4264bMutationBody = Op331d0cc4dbe99449d67d209c0de4264bBody;
-export type Op331d0cc4dbe99449d67d209c0de4264bMutationError = void;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>, {data: Op331d0cc4dbe99449d67d209c0de4264bBody}> = (props) => {
+          const {data} = props ?? {};
 
-/**
+          return  Op331d0cc4dbe99449d67d209c0de4264b(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type Op331d0cc4dbe99449d67d209c0de4264bMutationResult = NonNullable<Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>>
+    export type Op331d0cc4dbe99449d67d209c0de4264bMutationBody = Op331d0cc4dbe99449d67d209c0de4264bBody
+    export type Op331d0cc4dbe99449d67d209c0de4264bMutationError = void
+
+    /**
  * @summary 发送邮件验证码
  */
-export const useOp331d0cc4dbe99449d67d209c0de4264b = <TError = void, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
-      TError,
-      { data: Op331d0cc4dbe99449d67d209c0de4264bBody },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient
-): UseMutationReturnType<
-  Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
-  TError,
-  { data: Op331d0cc4dbe99449d67d209c0de4264bBody },
-  TContext
-> => {
-  const mutationOptions = getOp331d0cc4dbe99449d67d209c0de4264bMutationOptions(options);
+export const useOp331d0cc4dbe99449d67d209c0de4264b = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>, TError,{data: Op331d0cc4dbe99449d67d209c0de4264bBody}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof Op331d0cc4dbe99449d67d209c0de4264b>>,
+        TError,
+        {data: Op331d0cc4dbe99449d67d209c0de4264bBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getOp331d0cc4dbe99449d67d209c0de4264bMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * 验证用户输入的邮件验证码是否正确
  * @summary 验证邮件验证码
  */
 export const c3457fc283d3f681bee0df9c9a41350f = (
-  c3457fc283d3f681bee0df9c9a41350fBody: MaybeRef<C3457fc283d3f681bee0df9c9a41350fBody>,
-  signal?: AbortSignal
+    c3457fc283d3f681bee0df9c9a41350fBody: MaybeRef<C3457fc283d3f681bee0df9c9a41350fBody>,
+ signal?: AbortSignal
 ) => {
-  c3457fc283d3f681bee0df9c9a41350fBody = unref(c3457fc283d3f681bee0df9c9a41350fBody);
+      c3457fc283d3f681bee0df9c9a41350fBody = unref(c3457fc283d3f681bee0df9c9a41350fBody);
+      
+      return apiAlova<C3457fc283d3f681bee0df9c9a41350f200>(
+      {url: `/email/verifyCode`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: c3457fc283d3f681bee0df9c9a41350fBody, signal
+    },
+      );
+    }
+  
 
-  return apiAlova<C3457fc283d3f681bee0df9c9a41350f200>({
-    url: `/email/verifyCode`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: c3457fc283d3f681bee0df9c9a41350fBody,
-    signal
-  });
-};
 
-export const getC3457fc283d3f681bee0df9c9a41350fMutationOptions = <TError = void, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
-    TError,
-    { data: C3457fc283d3f681bee0df9c9a41350fBody },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
-  TError,
-  { data: C3457fc283d3f681bee0df9c9a41350fBody },
-  TContext
-> => {
-  const mutationKey = ['c3457fc283d3f681bee0df9c9a41350f'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
+export const getC3457fc283d3f681bee0df9c9a41350fMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>, TError,{data: C3457fc283d3f681bee0df9c9a41350fBody}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>, TError,{data: C3457fc283d3f681bee0df9c9a41350fBody}, TContext> => {
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
-    { data: C3457fc283d3f681bee0df9c9a41350fBody }
-  > = props => {
-    const { data } = props ?? {};
+const mutationKey = ['c3457fc283d3f681bee0df9c9a41350f'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-    return c3457fc283d3f681bee0df9c9a41350f(data);
-  };
+      
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type C3457fc283d3f681bee0df9c9a41350fMutationResult = NonNullable<
-  Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>
->;
-export type C3457fc283d3f681bee0df9c9a41350fMutationBody = C3457fc283d3f681bee0df9c9a41350fBody;
-export type C3457fc283d3f681bee0df9c9a41350fMutationError = void;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>, {data: C3457fc283d3f681bee0df9c9a41350fBody}> = (props) => {
+          const {data} = props ?? {};
 
-/**
+          return  c3457fc283d3f681bee0df9c9a41350f(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type C3457fc283d3f681bee0df9c9a41350fMutationResult = NonNullable<Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>>
+    export type C3457fc283d3f681bee0df9c9a41350fMutationBody = C3457fc283d3f681bee0df9c9a41350fBody
+    export type C3457fc283d3f681bee0df9c9a41350fMutationError = void
+
+    /**
  * @summary 验证邮件验证码
  */
-export const useC3457fc283d3f681bee0df9c9a41350f = <TError = void, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
-      TError,
-      { data: C3457fc283d3f681bee0df9c9a41350fBody },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient
-): UseMutationReturnType<
-  Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
-  TError,
-  { data: C3457fc283d3f681bee0df9c9a41350fBody },
-  TContext
-> => {
-  const mutationOptions = getC3457fc283d3f681bee0df9c9a41350fMutationOptions(options);
+export const useC3457fc283d3f681bee0df9c9a41350f = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>, TError,{data: C3457fc283d3f681bee0df9c9a41350fBody}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof c3457fc283d3f681bee0df9c9a41350f>>,
+        TError,
+        {data: C3457fc283d3f681bee0df9c9a41350fBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
+      const mutationOptions = getC3457fc283d3f681bee0df9c9a41350fMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
+ * 通过邮箱验证码重置用户密码
+ * @summary 重置密码
+ */
+export const Op8c8bacf6f81bff1dcdff8224cab42b0c = (
+    op8c8bacf6f81bff1dcdff8224cab42b0cBody: MaybeRef<Op8c8bacf6f81bff1dcdff8224cab42b0cBody>,
+ signal?: AbortSignal
+) => {
+      op8c8bacf6f81bff1dcdff8224cab42b0cBody = unref(op8c8bacf6f81bff1dcdff8224cab42b0cBody);
+      
+      return apiAlova<Op8c8bacf6f81bff1dcdff8224cab42b0c200>(
+      {url: `/email/resetPassword`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: op8c8bacf6f81bff1dcdff8224cab42b0cBody, signal
+    },
+      );
+    }
+  
+
+
+export const getOp8c8bacf6f81bff1dcdff8224cab42b0cMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>, TError,{data: Op8c8bacf6f81bff1dcdff8224cab42b0cBody}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>, TError,{data: Op8c8bacf6f81bff1dcdff8224cab42b0cBody}, TContext> => {
+
+const mutationKey = ['op8c8bacf6f81bff1dcdff8224cab42b0c'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>, {data: Op8c8bacf6f81bff1dcdff8224cab42b0cBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  Op8c8bacf6f81bff1dcdff8224cab42b0c(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type Op8c8bacf6f81bff1dcdff8224cab42b0cMutationResult = NonNullable<Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>>
+    export type Op8c8bacf6f81bff1dcdff8224cab42b0cMutationBody = Op8c8bacf6f81bff1dcdff8224cab42b0cBody
+    export type Op8c8bacf6f81bff1dcdff8224cab42b0cMutationError = void
+
+    /**
+ * @summary 重置密码
+ */
+export const useOp8c8bacf6f81bff1dcdff8224cab42b0c = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>, TError,{data: Op8c8bacf6f81bff1dcdff8224cab42b0cBody}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof Op8c8bacf6f81bff1dcdff8224cab42b0c>>,
+        TError,
+        {data: Op8c8bacf6f81bff1dcdff8224cab42b0cBody},
+        TContext
+      > => {
+
+      const mutationOptions = getOp8c8bacf6f81bff1dcdff8224cab42b0cMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
