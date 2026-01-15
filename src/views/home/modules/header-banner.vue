@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
@@ -53,6 +53,39 @@ const greeting = computed(() => {
   }
   return $t('page.home.greetingNight', { userName });
 });
+
+// 当前日期和时间
+const currentDateTime = ref('');
+const timeUpdateTimer = ref<number | null>(null);
+
+// 更新日期时间
+const updateDateTime = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+  const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  const day = days[now.getDay()];
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  currentDateTime.value = `${year}年${month}月${date}日 ${day} ${hours}:${minutes}:${seconds}`;
+};
+
+// 组件挂载时启动定时器
+onMounted(() => {
+  updateDateTime();
+  timeUpdateTimer.value = window.setInterval(updateDateTime, 1000); // 每秒更新一次
+});
+
+// 组件卸载时清除定时器
+onUnmounted(() => {
+  if (timeUpdateTimer.value) {
+    clearInterval(timeUpdateTimer.value);
+  }
+});
 </script>
 
 <template>
@@ -67,7 +100,7 @@ const greeting = computed(() => {
             <h3 class="text-18px font-semibold">
               {{ greeting }}
             </h3>
-            <p class="text-#999 leading-30px">{{ $t('page.home.weatherDesc') }}</p>
+            <p class="text-#999 leading-30px">{{ currentDateTime }}</p>
           </div>
         </div>
       </ElCol>
