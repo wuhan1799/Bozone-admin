@@ -20,26 +20,28 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
   transform: response => defaultTransform(response),
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
-    { prop: 'id', label: $t('page.manage.menu.id') },
+    { prop: 'id', label: $t('page.manage.menu.id'), width: 50 },
     {
       prop: 'menuType',
       label: $t('page.manage.menu.menuType'),
       width: 90,
       formatter: row => {
         const tagMap: Record<Api.SystemManage.MenuType, UI.ThemeColor> = {
-          1: 'info',
-          2: 'primary'
+          '1': 'info',
+          '2': 'primary'
         };
 
-        const label = $t(menuTypeRecord[row.menuType]);
+        const menuType = row.menuType;
+        const i18nKey = menuTypeRecord[menuType] || 'page.manage.menu.type.menu'; // 添加默认值
+        const label = $t(i18nKey);
 
-        return <ElTag type={tagMap[row.menuType]}>{label}</ElTag>;
+        return <ElTag type={tagMap[menuType] || 'info'}>{label}</ElTag>;
       }
     },
     {
       prop: 'menuName',
       label: $t('page.manage.menu.menuName'),
-      minWidth: 120,
+      minWidth: 60,
       formatter: row => {
         const { i18nKey, menuName } = row;
 
@@ -51,7 +53,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
     {
       prop: 'icon',
       label: $t('page.manage.menu.icon'),
-      width: 100,
+      width: 50,
       formatter: row => {
         const icon = row.iconType === '1' ? row.icon : undefined;
 
@@ -64,8 +66,8 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
         );
       }
     },
-    { prop: 'routeName', label: $t('page.manage.menu.routeName'), minWidth: 120 },
-    { prop: 'routePath', label: $t('page.manage.menu.routePath'), minWidth: 120 },
+    { prop: 'routeName', label: $t('page.manage.menu.routeName'), minWidth: 60 },
+    { prop: 'routePath', label: $t('page.manage.menu.routePath'), width: 320 },
     {
       prop: 'status',
       label: $t('page.manage.menu.menuStatus'),
@@ -107,7 +109,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
     {
       prop: 'operate',
       label: $t('common.operate'),
-      width: 270,
+      width: 130,
       formatter: row => (
         <div class="flex-center justify-end pr-10px">
           {row.menuType === '1' && (
