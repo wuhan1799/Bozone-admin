@@ -327,7 +327,11 @@ const local: App.I18n.Schema = {
     home: {
       branchDesc:
         'For the convenience of everyone in developing and updating the merge, we have streamlined the code of the main branch, only retaining the homepage menu, and the rest of the content has been moved to the example branch for maintenance. The preview address displays the content of the example branch.',
-      greeting: 'Good morning, {userName}, today is another day full of vitality!',
+      greetingMorning: 'Good morning, {userName}, today is another day full of vitality!',
+      greetingNoon: 'Good afternoon, {userName}, take a good rest!',
+      greetingAfternoon: 'Good afternoon, {userName}, stay focused!',
+      greetingEvening: 'Good evening, {userName}, you have worked hard today!',
+      greetingNight: 'It is late at night, {userName}, please rest well!',
       weatherDesc: 'Today is cloudy to clear, 20℃ - 25℃!',
       projectCount: 'Project Count',
       todo: 'Todo',

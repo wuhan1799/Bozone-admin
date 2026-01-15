@@ -33,6 +33,26 @@ const statisticData = computed<StatisticData[]>(() => [
   { id: 1, title: $t('page.home.todo'), value: 4, formatter: (val: number) => `${val}/${16}` },
   { id: 2, title: $t('page.home.message'), value: 12 }
 ]);
+
+// 根据当前时间动态计算问候语
+const greeting = computed(() => {
+  const hour = new Date().getHours();
+  const userName = authStore.userInfo.realName;
+
+  if (hour >= 5 && hour < 12) {
+    return $t('page.home.greetingMorning', { userName });
+  }
+  if (hour >= 12 && hour < 14) {
+    return $t('page.home.greetingNoon', { userName });
+  }
+  if (hour >= 14 && hour < 18) {
+    return $t('page.home.greetingAfternoon', { userName });
+  }
+  if (hour >= 18 && hour < 23) {
+    return $t('page.home.greetingEvening', { userName });
+  }
+  return $t('page.home.greetingNight', { userName });
+});
 </script>
 
 <template>
@@ -42,11 +62,10 @@ const statisticData = computed<StatisticData[]>(() => [
         <div class="flex-y-center">
           <div class="size-72px shrink-0 overflow-hidden rd-1/2">
             <img v-if="avatarUrl" :src="avatarUrl" class="size-full" alt="用户头像" />
-            <img v-else src="@/assets/imgs/soybean.jpg" class="size-full" alt="默认头像" />
           </div>
           <div class="pl-12px">
             <h3 class="text-18px font-semibold">
-              {{ $t('page.home.greeting', { userName: authStore.userInfo.userName }) }}
+              {{ greeting }}
             </h3>
             <p class="text-#999 leading-30px">{{ $t('page.home.weatherDesc') }}</p>
           </div>
