@@ -152,8 +152,7 @@ const local: App.I18n.Schema = {
     themeDrawerTitle: '主题配置',
     pageFunTitle: '页面功能',
     configOperation: {
-      copyConfig: '复制配置',
-      copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
+      saveConfig: '保存配置',
       resetConfig: '重置配置',
       resetSuccessMsg: '重置成功'
     }

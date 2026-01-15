@@ -152,8 +152,7 @@ const local: App.I18n.Schema = {
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
     configOperation: {
-      copyConfig: 'Copy Config',
-      copySuccessMsg: 'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
+      saveConfig: 'Save Config',
       resetConfig: 'Reset Config',
       resetSuccessMsg: 'Reset Success'
     }

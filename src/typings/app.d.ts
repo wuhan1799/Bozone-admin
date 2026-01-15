@@ -411,8 +411,7 @@ declare namespace App {
         themeDrawerTitle: string;
         pageFunTitle: string;
         configOperation: {
-          copyConfig: string;
-          copySuccessMsg: string;
+          saveConfig: string;
           resetConfig: string;
           resetSuccessMsg: string;
         };
