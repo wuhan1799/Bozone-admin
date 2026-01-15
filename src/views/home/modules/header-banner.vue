@@ -34,33 +34,33 @@ const statisticData = computed<StatisticData[]>(() => [
   { id: 2, title: $t('page.home.message'), value: 12 }
 ]);
 
-// 根据当前时间动态计算问候语
-const greeting = computed(() => {
-  const hour = new Date().getHours();
-  const userName = authStore.userInfo.realName;
-
-  if (hour >= 5 && hour < 12) {
-    return $t('page.home.greetingMorning', { userName });
-  }
-  if (hour >= 12 && hour < 14) {
-    return $t('page.home.greetingNoon', { userName });
-  }
-  if (hour >= 14 && hour < 18) {
-    return $t('page.home.greetingAfternoon', { userName });
-  }
-  if (hour >= 18 && hour < 23) {
-    return $t('page.home.greetingEvening', { userName });
-  }
-  return $t('page.home.greetingNight', { userName });
-});
+// 问候语
+const greeting = ref('');
 
 // 当前日期和时间
 const currentDateTime = ref('');
 const timeUpdateTimer = ref<number | null>(null);
 
-// 更新日期时间
+// 更新日期时间和问候语
 const updateDateTime = () => {
   const now = new Date();
+  const hour = now.getHours();
+  const userName = authStore.userInfo.realName;
+
+  // 更新问候语
+  if (hour >= 5 && hour < 12) {
+    greeting.value = $t('page.home.greetingMorning', { userName });
+  } else if (hour >= 12 && hour < 14) {
+    greeting.value = $t('page.home.greetingNoon', { userName });
+  } else if (hour >= 14 && hour < 18) {
+    greeting.value = $t('page.home.greetingAfternoon', { userName });
+  } else if (hour >= 18 && hour < 23) {
+    greeting.value = $t('page.home.greetingEvening', { userName });
+  } else {
+    greeting.value = $t('page.home.greetingNight', { userName });
+  }
+
+  // 更新日期时间
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
   const date = now.getDate();
