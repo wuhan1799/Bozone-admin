@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import { useBoolean } from '@sa/hooks';
@@ -15,9 +15,22 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 
 const wrapperRef = ref<HTMLElement | null>(null);
 
+const searchParams = reactive(getInitSearchParams());
+
+function getInitSearchParams(): Api.SystemManage.CommonSearchParams {
+  return {
+    current: 1,
+    size: 10
+  };
+}
+
 const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useUIPaginatedTable({
-  api: () => fetchGetMenuList(),
+  api: () => fetchGetMenuList({ ...searchParams }),
   transform: response => defaultTransform(response),
+  onPaginationParamsChange: async params => {
+    searchParams.current = params.currentPage ?? 1;
+    searchParams.size = params.pageSize ?? 10;
+  },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
     { prop: 'id', label: $t('page.manage.menu.id'), width: 50 },

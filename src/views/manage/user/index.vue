@@ -15,7 +15,7 @@ const searchParams = reactive(getInitSearchParams());
 function getInitSearchParams(): Api.SystemManage.UserSearchParams {
   return {
     current: 1,
-    size: 30,
+    size: 10,
     status: undefined,
     userName: undefined,
     userGender: undefined,
@@ -27,14 +27,15 @@ function getInitSearchParams(): Api.SystemManage.UserSearchParams {
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: {
-    currentPage: searchParams.current,
-    pageSize: searchParams.size
+    currentPage: 1,
+    pageSize: 10,
+    pageSizes: [10, 20, 30, 50, 100]
   },
-  api: () => fetchGetUserList(searchParams),
+  api: () => fetchGetUserList({ ...searchParams }),
   transform: response => {
     return defaultTransform(response);
   },
-  onPaginationParamsChange: params => {
+  onPaginationParamsChange: async params => {
     searchParams.current = params.currentPage;
     searchParams.size = params.pageSize;
   },
@@ -120,18 +121,12 @@ const {
 } = useTableOperate(data, 'id', getData);
 
 async function handleBatchDelete() {
-  // eslint-disable-next-line no-console
-  console.log(checkedRowKeys.value);
   // request
-
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
-  // eslint-disable-next-line no-console
-  console.log(id);
+function handleDelete(_id: number) {
   // request
-
   onDeleted();
 }
 
