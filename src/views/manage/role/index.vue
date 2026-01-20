@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import { enableStatusRecord } from '@/constants/business';
-import { fetchGetRoleList } from '@/service/api';
+import { fetchBatchDeleteRole, fetchDeleteRole, fetchGetRoleList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import RoleOperateDrawer from './modules/role-operate-drawer.vue';
@@ -93,20 +93,23 @@ const {
 } = useTableOperate(data, 'id', getData);
 
 async function handleBatchDelete() {
-  // eslint-disable-next-line no-console
-  console.log(checkedRowKeys.value);
-  // request
+  const selectedRows = checkedRowKeys.value as any[];
+  const ids = selectedRows.map(row => row.id);
+  const { error } = await fetchBatchDeleteRole(ids);
 
-  onBatchDeleted();
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onBatchDeleted();
+  }
 }
 
-function handleDelete(id: number) {
-  // request
+async function handleDelete(id: number) {
+  const { error } = await fetchDeleteRole(id);
 
-  // eslint-disable-next-line no-console
-  console.log(id);
-
-  onDeleted();
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onDeleted();
+  }
 }
 
 function resetSearchParams() {

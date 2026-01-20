@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { useBoolean } from '@sa/hooks';
 import { enableStatusOptions } from '@/constants/business';
+import { fetchAddRole, fetchUpdateRole } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import MenuAuthModal from './menu-auth-modal.vue';
@@ -33,6 +34,13 @@ const { defaultRequiredRule } = useFormRules();
 const { bool: menuAuthVisible, setTrue: openMenuAuthModal } = useBoolean();
 const { bool: buttonAuthVisible, setTrue: openButtonAuthModal } = useBoolean();
 
+const roleCodeRule = {
+  required: true,
+  pattern: /^[a-zA-Z0-9_]+$/,
+  message: $t('page.manage.role.form.roleCodeInvalid'),
+  trigger: 'blur'
+};
+
 const title = computed(() => {
   const titles: Record<UI.TableOperateType, string> = {
     add: $t('page.manage.role.addRole'),
@@ -58,7 +66,7 @@ type RuleKey = Exclude<keyof Model, 'roleDesc'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   roleName: defaultRequiredRule,
-  roleCode: defaultRequiredRule,
+  roleCode: roleCodeRule,
   status: defaultRequiredRule
 };
 
@@ -80,10 +88,28 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+
+  let data: Api.SystemManage.Role;
+  if (props.operateType === 'add') {
+    data = {
+      ...model.value,
+      id: Date.now(),
+      createBy: '',
+      createTime: '',
+      updateBy: '',
+      updateTime: ''
+    } as Api.SystemManage.Role;
+  } else {
+    data = { ...props.rowData, ...model.value } as Api.SystemManage.Role;
+  }
+
+  const { error } = await (props.operateType === 'add' ? fetchAddRole(data) : fetchUpdateRole(data));
+
+  if (!error) {
+    window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
+    closeDrawer();
+    emit('submitted');
+  }
 }
 
 watch(visible, () => {

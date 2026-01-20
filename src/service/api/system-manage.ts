@@ -90,3 +90,39 @@ export function fetchBatchDeleteUser(ids: number[]) {
     data: { ids }
   });
 }
+
+/** add role */
+export function fetchAddRole(data: Api.SystemManage.Role) {
+  return request<null>({
+    url: '/systemManage/addRole',
+    method: 'post',
+    data
+  });
+}
+
+/** update role */
+export function fetchUpdateRole(data: Api.SystemManage.Role) {
+  return request<null>({
+    url: '/systemManage/updateRole',
+    method: 'post',
+    data
+  });
+}
+
+/** delete role */
+export function fetchDeleteRole(id: number) {
+  return request<null>({
+    url: '/systemManage/deleteRole',
+    method: 'delete',
+    data: { id }
+  });
+}
+
+/** batch delete roles */
+export function fetchBatchDeleteRole(ids: number[]) {
+  return request<null>({
+    url: '/systemManage/batchDeleteRole',
+    method: 'delete',
+    data: { ids }
+  });
+}

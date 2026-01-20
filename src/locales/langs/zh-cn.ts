@@ -427,6 +427,7 @@ const local: App.I18n.Schema = {
         form: {
           roleName: '请输入角色名称',
           roleCode: '请输入角色编码',
+          roleCodeInvalid: '角色编码只能包含字母、数字和下划线',
           roleStatus: '请选择角色状态',
           roleDesc: '请输入角色描述'
         },

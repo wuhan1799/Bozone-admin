@@ -611,6 +611,7 @@ declare namespace App {
             form: {
               roleName: string;
               roleCode: string;
+              roleCodeInvalid: string;
               roleStatus: string;
               roleDesc: string;
             };

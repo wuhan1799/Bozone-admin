@@ -427,6 +427,7 @@ const local: App.I18n.Schema = {
         form: {
           roleName: 'Please enter role name',
           roleCode: 'Please enter role code',
+          roleCodeInvalid: 'Role code can only contain letters, numbers, and underscores',
           roleStatus: 'Please select role status',
           roleDesc: 'Please enter role description'
         },
