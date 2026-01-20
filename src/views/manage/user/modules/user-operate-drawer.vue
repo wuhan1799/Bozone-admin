@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
-import { fetchGetAllRoles } from '@/service/api';
+import { fetchAddUser, fetchGetAllRoles, fetchUpdateUser } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -39,13 +39,14 @@ const title = computed(() => {
 
 type Model = Pick<
   Api.SystemManage.User,
-  'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'userRoles' | 'status'
+  'id' | 'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'userRoles' | 'status'
 >;
 
 const model = ref(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    id: 0,
     userName: '',
     userGender: undefined,
     nickName: '',
@@ -101,10 +102,28 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+
+  let data: Api.SystemManage.User;
+  if (props.operateType === 'add') {
+    data = {
+      ...model.value,
+      id: Date.now(),
+      createBy: '',
+      createTime: '',
+      updateBy: '',
+      updateTime: ''
+    } as Api.SystemManage.User;
+  } else {
+    data = { ...props.rowData, ...model.value } as Api.SystemManage.User;
+  }
+
+  const { error } = await (props.operateType === 'add' ? fetchAddUser(data) : fetchUpdateUser(data));
+
+  if (!error) {
+    window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
+    closeDrawer();
+    emit('submitted');
+  }
 }
 
 watch(visible, () => {

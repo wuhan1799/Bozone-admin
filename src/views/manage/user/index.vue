@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
-import { fetchGetUserList } from '@/service/api';
+import { fetchBatchDeleteUser, fetchDeleteUser, fetchGetUserList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
@@ -121,13 +121,21 @@ const {
 } = useTableOperate(data, 'id', getData);
 
 async function handleBatchDelete() {
-  // request
-  onBatchDeleted();
+  const selectedRows = checkedRowKeys.value as any[];
+  const ids = selectedRows.map(row => row.id);
+  const { error } = await fetchBatchDeleteUser(ids);
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onBatchDeleted();
+  }
 }
 
-function handleDelete(_id: number) {
-  // request
-  onDeleted();
+async function handleDelete(id: number) {
+  const { error } = await fetchDeleteUser(id);
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onDeleted();
+  }
 }
 
 function resetSearchParams() {

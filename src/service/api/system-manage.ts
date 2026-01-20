@@ -54,3 +54,39 @@ export function fetchGetMenuTree() {
     method: 'get'
   });
 }
+
+/** add user */
+export function fetchAddUser(data: Api.SystemManage.User) {
+  return request<null>({
+    url: '/systemManage/addUser',
+    method: 'post',
+    data
+  });
+}
+
+/** update user */
+export function fetchUpdateUser(data: Api.SystemManage.User) {
+  return request<null>({
+    url: '/systemManage/updateUser',
+    method: 'post',
+    data
+  });
+}
+
+/** delete user */
+export function fetchDeleteUser(id: number) {
+  return request<null>({
+    url: '/systemManage/deleteUser',
+    method: 'delete',
+    data: { id }
+  });
+}
+
+/** batch delete users */
+export function fetchBatchDeleteUser(ids: number[]) {
+  return request<null>({
+    url: '/systemManage/batchDeleteUser',
+    method: 'delete',
+    data: { ids }
+  });
+}
