@@ -129,6 +129,10 @@ declare namespace Api {
     /** menu list */
     type MenuList = Common.PaginatingQueryRecord<Menu>;
 
+    /** menu search params */
+    type MenuSearchParams = CommonSearchParams &
+      Partial<Pick<Api.SystemManage.Menu, 'status' | 'hideInMenu' | 'parentId'>>;
+
     type MenuTree = {
       id: number;
       label: string;

@@ -162,3 +162,21 @@ export function fetchBatchDeleteMenu(ids: number[]) {
     data: { ids }
   });
 }
+
+/** get menu role ids */
+export function fetchGetMenuRoleIds(params: { menuId: number }) {
+  return request<number[]>({
+    url: '/systemManage/getMenuRoleIds',
+    method: 'get',
+    params
+  });
+}
+
+/** update menu role auth */
+export function fetchUpdateMenuRoleAuth(data: { menuId: number; roleIds: number[] }) {
+  return request<null>({
+    url: '/systemManage/updateMenuRoleAuth',
+    method: 'post',
+    data
+  });
+}

@@ -527,6 +527,10 @@ const local: App.I18n.Schema = {
           iconify: 'iconify图标',
           local: '本地图标'
         }
+      },
+      permission: {
+        title: '菜单权限管理',
+        assignPermission: '分配权限'
       }
     }
   },

@@ -713,6 +713,10 @@ declare namespace App {
               local: string;
             };
           };
+          permission: {
+            title: string;
+            assignPermission: string;
+          };
         };
       };
       form: {

@@ -527,6 +527,10 @@ const local: App.I18n.Schema = {
           iconify: 'Iconify Icon',
           local: 'Local Icon'
         }
+      },
+      permission: {
+        title: 'Menu Permission Management',
+        assignPermission: 'Assign Permission'
       }
     }
   },
