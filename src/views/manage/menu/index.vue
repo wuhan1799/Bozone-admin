@@ -5,7 +5,7 @@ import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import { useBoolean } from '@sa/hooks';
 import { yesOrNoRecord } from '@/constants/common';
 import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
-import { fetchGetAllPages, fetchGetMenuList } from '@/service/api';
+import { fetchBatchDeleteMenu, fetchDeleteMenu, fetchGetAllPages, fetchGetMenuList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
@@ -152,36 +152,45 @@ const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, 'id'
 
 const operateType = ref<OperateType>('add');
 
-function handleAdd() {
+async function handleAdd() {
+  await getAllMenus();
   operateType.value = 'add';
   openModal();
 }
 
 async function handleBatchDelete() {
-  // request
+  const selectedRows = checkedRowKeys.value as any[];
+  const ids = selectedRows.map(row => row.id);
+  const { error } = await fetchBatchDeleteMenu(ids);
 
-  onBatchDeleted();
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onBatchDeleted();
+  }
 }
 
-function handleDelete(id: number) {
-  // eslint-disable-next-line no-console
-  console.log(id);
-  // request
+async function handleDelete(id: number) {
+  const { error } = await fetchDeleteMenu(id);
 
-  onDeleted();
+  if (!error) {
+    window.$message?.success($t('common.deleteSuccess'));
+    onDeleted();
+  }
 }
 
 /** the edit menu data or the parent menu data when adding a child menu */
 const editingData: Ref<Api.SystemManage.Menu | null> = ref(null);
 
-function handleEdit(item: Api.SystemManage.Menu) {
+async function handleEdit(item: Api.SystemManage.Menu) {
+  await getAllMenus();
   operateType.value = 'edit';
   editingData.value = { ...item };
 
   openModal();
 }
 
-function handleAddChildMenu(item: Api.SystemManage.Menu) {
+async function handleAddChildMenu(item: Api.SystemManage.Menu) {
+  await getAllMenus();
   operateType.value = 'addChild';
 
   editingData.value = { ...item };
@@ -190,14 +199,21 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
 }
 
 const allPages = ref<string[]>([]);
+const allMenus = ref<Api.SystemManage.Menu[]>([]);
 
 async function getAllPages() {
   const { data: pages } = await fetchGetAllPages();
   allPages.value = pages || [];
 }
 
+async function getAllMenus() {
+  const { data: menus } = await fetchGetMenuList({ current: 1, size: 100 });
+  allMenus.value = menus?.records || [];
+}
+
 function init() {
   getAllPages();
+  getAllMenus();
 }
 
 // init
@@ -247,6 +263,7 @@ init();
         :operate-type="operateType"
         :row-data="editingData"
         :all-pages="allPages"
+        :all-menus="allMenus"
         @submitted="getDataByPage"
       />
     </ElCard>

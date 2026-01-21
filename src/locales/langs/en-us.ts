@@ -158,6 +158,7 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
+    manage_permission: 'Permission Management',
     login: 'Login',
     403: 'No Permission',
     404: 'Page Not Found',

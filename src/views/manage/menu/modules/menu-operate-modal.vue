@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { computed, h, ref, watch } from 'vue';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
-import { fetchGetAllRoles } from '@/service/api';
+import { fetchAddMenu, fetchUpdateMenu } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
@@ -25,6 +25,8 @@ interface Props {
   rowData?: Api.SystemManage.Menu | null;
   /** all pages */
   allPages: string[];
+  /** all menus */
+  allMenus: Api.SystemManage.Menu[];
 }
 
 const props = defineProps<Props>();
@@ -156,21 +158,33 @@ const layoutOptions: CommonType.Option[] = [
   { label: 'blank', value: 'blank' }
 ];
 
-/** the enabled role options */
-const roleOptions = ref<CommonType.Option<string>[]>([]);
+const parentMenuOptions = computed(() => {
+  const menus = props.allMenus.filter(menu => {
+    // 只显示一级菜单（parentId === 0）且不隐藏的菜单
+    if (menu.parentId !== 0) {
+      return false;
+    }
+    if (menu.hideInMenu) {
+      return false;
+    }
+    // 排除当前正在编辑的菜单
+    if (props.operateType === 'edit' && menu.id === props.rowData?.id) {
+      return false;
+    }
+    // 添加子菜单时排除当前菜单
+    if (props.operateType === 'addChild' && menu.id === props.rowData?.id) {
+      return false;
+    }
+    return true;
+  });
 
-async function getRoleOptions() {
-  const { error, data } = await fetchGetAllRoles();
+  const options = menus.map(menu => ({
+    label: menu.i18nKey ? $t(menu.i18nKey) : menu.menuName,
+    value: menu.id
+  }));
 
-  if (!error) {
-    const options = data.map(item => ({
-      label: item.roleName,
-      value: item.roleCode
-    }));
-
-    roleOptions.value = [...options];
-  }
-}
+  return options;
+});
 
 /** - add a query input */
 function addQuery(index: number) {
@@ -257,20 +271,39 @@ async function handleSubmit() {
 
   const params = getSubmitParams();
 
-  // eslint-disable-next-line no-console
-  console.log('params: ', params);
+  let data: Api.SystemManage.Menu;
+  if (props.operateType === 'add' || props.operateType === 'addChild') {
+    data = {
+      ...params,
+      id: Date.now(),
+      createBy: '',
+      createTime: '',
+      updateBy: '',
+      updateTime: ''
+    } as Api.SystemManage.Menu;
+  } else {
+    data = { ...props.rowData, ...params } as Api.SystemManage.Menu;
+  }
 
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+  const { error } = await (props.operateType === 'add' || props.operateType === 'addChild'
+    ? fetchAddMenu(data)
+    : fetchUpdateMenu(data));
+
+  if (!error) {
+    window.$message?.success(
+      $t(props.operateType === 'add' || props.operateType === 'addChild' ? 'common.addSuccess' : 'common.updateSuccess')
+    );
+    closeDrawer();
+    emit('submitted');
+  } else {
+    window.$message?.error('请求失败，请稍后重试');
+  }
 }
 
 watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
-    getRoleOptions();
   }
 });
 
@@ -306,13 +339,21 @@ watch(
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
+            <ElFormItem label="父菜单" prop="parentId">
+              <ElSelect v-model="model.parentId" clearable placeholder="请选择父菜单">
+                <ElOption label="根菜单" :value="0" />
+                <ElOption v-for="{ label, value } in parentMenuOptions" :key="value" :label="label" :value="value" />
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
             <ElFormItem :label="$t('page.manage.menu.routeName')" prop="routeName">
               <ElInput v-model="model.routeName" :placeholder="$t('page.manage.menu.form.routeName')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('page.manage.menu.routePath')" prop="routePath">
-              <ElInput v-model="model.routePath" disabled :placeholder="$t('page.manage.menu.form.routePath')" />
+              <ElInput v-model="model.routePath" :placeholder="$t('page.manage.menu.form.routePath')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">

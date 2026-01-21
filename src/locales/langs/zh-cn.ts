@@ -158,6 +158,7 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
+    manage_permission: '权限管理',
     login: '登录',
     403: '无权限',
     404: '页面不存在',

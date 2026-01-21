@@ -126,3 +126,39 @@ export function fetchBatchDeleteRole(ids: number[]) {
     data: { ids }
   });
 }
+
+/** add menu */
+export function fetchAddMenu(data: Api.SystemManage.Menu) {
+  return request<null>({
+    url: '/systemManage/addMenu',
+    method: 'post',
+    data
+  });
+}
+
+/** update menu */
+export function fetchUpdateMenu(data: Api.SystemManage.Menu) {
+  return request<null>({
+    url: '/systemManage/updateMenu',
+    method: 'post',
+    data
+  });
+}
+
+/** delete menu */
+export function fetchDeleteMenu(id: number) {
+  return request<null>({
+    url: '/systemManage/deleteMenu',
+    method: 'delete',
+    data: { id }
+  });
+}
+
+/** batch delete menus */
+export function fetchBatchDeleteMenu(ids: number[]) {
+  return request<null>({
+    url: '/systemManage/batchDeleteMenu',
+    method: 'delete',
+    data: { ids }
+  });
+}

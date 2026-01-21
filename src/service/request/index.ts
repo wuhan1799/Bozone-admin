@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { AxiosResponse } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
@@ -20,7 +21,8 @@ export const request = createFlatRequest(
   {
     defaultState: {
       errMsgStack: [],
-      refreshTokenPromise: null
+      refreshTokenPromise: null,
+      retryCount: 0
     } as RequestInstanceState,
     transform(response: AxiosResponse<App.Service.Response<any>>) {
       // 后端 /route/getUserRoutes 返回的数据结构不正确，直接在 response.data 下有 routes 和 home
@@ -65,6 +67,7 @@ export const request = createFlatRequest(
       const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       if (logoutCodes.includes(responseCode)) {
         handleLogout();
+        request.state.retryCount = 0;
         return null;
       }
 
@@ -88,6 +91,7 @@ export const request = createFlatRequest(
             logoutAndCleanup();
           });
 
+        request.state.retryCount = 0;
         return null;
       }
 
@@ -95,6 +99,14 @@ export const request = createFlatRequest(
       // the api `refreshToken` can not return error code in `expiredTokenCodes`, otherwise it will be a dead loop, should return `logoutCodes` or `modalLogoutCodes`
       const expiredTokenCodes = import.meta.env.VITE_SERVICE_EXPIRED_TOKEN_CODES?.split(',') || [];
       if (expiredTokenCodes.includes(responseCode)) {
+        // 防止无限重试：限制重试次数
+        request.state.retryCount = (request.state.retryCount || 0) + 1;
+        if (request.state.retryCount > 2) {
+          console.error('请求重试次数超过限制，停止重试', response.config.url, response.data);
+          request.state.retryCount = 0;
+          return null;
+        }
+
         const success = await handleExpiredRequest(request.state);
         if (success) {
           const Authorization = getAuthorization();
@@ -102,8 +114,15 @@ export const request = createFlatRequest(
 
           return instance.request(response.config) as Promise<AxiosResponse>;
         }
+        // 刷新token失败，重置重试计数
+        request.state.retryCount = 0;
+      } else {
+        // 非 token 过期错误，重置重试计数
+        request.state.retryCount = 0;
       }
 
+      // 重置重试计数
+      request.state.retryCount = 0;
       return null;
     },
     onError(error) {
