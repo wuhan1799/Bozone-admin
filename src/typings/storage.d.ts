@@ -44,5 +44,7 @@ declare namespace StorageType {
     rememberedUserName?: string;
     /** The remember me flag */
     rememberMe?: string;
+    /** The user info */
+    userInfo: Api.Auth.UserInfo;
   }
 }

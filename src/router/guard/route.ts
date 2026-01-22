@@ -35,8 +35,16 @@ export function createRouteGuard(router: Router) {
     const needLogin = !to.meta.constant;
     const routeRoles = to.meta.roles || [];
 
-    const hasRole = authStore.userInfo.roles.some(role => routeRoles.includes(role));
-    const hasAuth = authStore.isStaticSuper || !routeRoles.length || hasRole;
+    // 在动态路由模式下，后端已经过滤了路由，不需要前端再检查权限
+    const { VITE_AUTH_ROUTE_MODE } = import.meta.env;
+    const isDynamicMode = VITE_AUTH_ROUTE_MODE === 'dynamic';
+
+    let hasAuth = true;
+    if (!isDynamicMode) {
+      // 静态模式下，需要检查前端定义的 roles
+      const hasRole = authStore.userInfo.roles.some(role => routeRoles.includes(role));
+      hasAuth = authStore.isStaticSuper || hasRole;
+    }
 
     // if it is login route when logged in, then switch to the root page
     if (to.name === loginRoute && isLogin) {

@@ -4,7 +4,7 @@ import { ElButton, ElTag } from 'element-plus';
 import { yesOrNoRecord } from '@/constants/common';
 import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
 import { fetchGetMenuList } from '@/service/api';
-import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
+import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import PermissionAuthModal from './modules/permission-auth-modal.vue';
@@ -42,7 +42,6 @@ const { columns, columnChecks, data, loading, getData, mobilePagination } = useU
     searchParams.size = params.pageSize!;
   },
   columns: () => [
-    { prop: 'selection', type: 'selection', width: 48 },
     { prop: 'id', label: $t('page.manage.menu.id'), width: 50 },
     {
       prop: 'menuType',
@@ -132,8 +131,6 @@ const { columns, columnChecks, data, loading, getData, mobilePagination } = useU
   ]
 });
 
-const { checkedRowKeys } = useTableOperate(data, 'id', getData);
-
 const currentMenuId = ref<number | null>(null);
 const modalVisible = ref(false);
 
@@ -156,22 +153,14 @@ function handlePermissionSubmitted() {
           <p>{{ $t('page.manage.permission.title') }}</p>
           <TableHeaderOperation
             v-model:columns="columnChecks"
-            :disabled-delete="checkedRowKeys.length === 0"
             :loading="loading"
+            :show-buttons="false"
             @refresh="getData"
           />
         </div>
       </template>
       <div class="h-[calc(100%-50px)]">
-        <ElTable
-          v-loading="loading"
-          height="100%"
-          border
-          class="sm:h-full"
-          :data="data"
-          row-key="id"
-          @selection-change="checkedRowKeys = $event"
-        >
+        <ElTable v-loading="loading" height="100%" border class="sm:h-full" :data="data">
           <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
         </ElTable>
         <div class="mt-20px flex justify-end">

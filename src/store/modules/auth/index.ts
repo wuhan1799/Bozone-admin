@@ -38,6 +38,27 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     buttons: []
   });
 
+  /** Save userInfo to localStorage */
+  function saveUserInfoToStorage() {
+    const userInfoCopy = JSON.parse(JSON.stringify(userInfo));
+    localStg.set('userInfo', userInfoCopy);
+    console.log('[Auth] Saved userInfo to storage:', userInfoCopy);
+  }
+
+  /** Restore userInfo from localStorage */
+  function restoreUserInfoFromStorage() {
+    const storedUserInfo = localStg.get('userInfo') as Api.Auth.UserInfo;
+    if (storedUserInfo) {
+      Object.assign(userInfo, storedUserInfo);
+      console.log('[Auth] Restored userInfo from storage:', storedUserInfo);
+    } else {
+      console.log('[Auth] No userInfo found in storage');
+    }
+  }
+
+  // Initialize userInfo from localStorage immediately when store is created
+  restoreUserInfoFromStorage();
+
   /** is super role in static route */
   const isStaticSuper = computed(() => {
     const { VITE_AUTH_ROUTE_MODE, VITE_STATIC_SUPER_ROLE } = import.meta.env;
@@ -67,6 +88,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
     // 成功后清理前端
     clearAuthStorage();
+    localStg.remove('userInfo');
     // 手动重置状态
     token.value = '';
     Object.assign(userInfo, {
@@ -227,6 +249,9 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
             : info.userGender
       });
 
+      // Save to localStorage
+      saveUserInfoToStorage();
+
       return true;
     }
 
@@ -237,6 +262,9 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     const hasToken = getToken();
 
     if (hasToken) {
+      // 尝试从 localStorage 恢复 userInfo
+      restoreUserInfoFromStorage();
+
       const pass = await getUserInfo();
 
       if (!pass) {
