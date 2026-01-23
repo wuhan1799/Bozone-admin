@@ -179,8 +179,6 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     handleConstantAndAuthRoutes();
 
     setIsInitConstantRoute(true);
-
-    tabStore.initHomeTab();
   }
 
   /** Init auth route */
@@ -227,9 +225,21 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
       handleConstantAndAuthRoutes();
 
-      setRouteHome(home);
+      // 根据用户角色动态设置首页
+      const userRoles = authStore.userInfo.roles || [];
+      const canAccessHome = userRoles.some(role => role === 'super_admin' || role === 'admin');
 
-      handleUpdateRootRouteRedirect(home);
+      // 如果是超级管理员或管理员，使用后端返回的首页；否则使用个人中心
+      let actualHome = canAccessHome ? home : ('user-center' as LastLevelRouteKey);
+
+      // 如果管理员但后端返回个人中心，强制使用首页
+      if (canAccessHome && actualHome === 'user-center') {
+        actualHome = 'home' as LastLevelRouteKey;
+      }
+
+      setRouteHome(actualHome);
+
+      handleUpdateRootRouteRedirect(actualHome);
 
       setIsInitAuthRoute(true);
     } else {

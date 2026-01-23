@@ -56,10 +56,10 @@ const changePasswordMutation = useOp088c8b1984022f043150763386148f29({
       restoreValidation();
       drawerVisible.value = false;
 
-      // 重新登录
+      // 重新登录，不带上 redirect 参数
       setTimeout(async () => {
         await authStore.resetStore(false);
-        toLogin();
+        toLogin('pwd-login', '');
       }, 1000);
     }
   }

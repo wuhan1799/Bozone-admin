@@ -32,6 +32,7 @@ export function createRouteGuard(router: Router) {
     const noAuthorizationRoute: RouteKey = '403';
 
     const isLogin = Boolean(localStg.get('token'));
+    const isLoggingOut = authStore.isLoggingOut;
     const needLogin = !to.meta.constant;
     const routeRoles = to.meta.roles || [];
 
@@ -44,6 +45,11 @@ export function createRouteGuard(router: Router) {
       // 静态模式下，需要检查前端定义的 roles
       const hasRole = authStore.userInfo.roles.some(role => routeRoles.includes(role));
       hasAuth = authStore.isStaticSuper || hasRole;
+    } else if (to.name === 'home') {
+      // 动态模式下，需要特殊检查首页访问权限
+      // 只有管理员(super_admin, admin)可以访问首页
+      const userRoles = Array.from(authStore.userInfo.roles || []);
+      hasAuth = userRoles.some(role => role === 'super_admin' || role === 'admin');
     }
 
     // if it is login route when logged in, then switch to the root page
@@ -65,13 +71,20 @@ export function createRouteGuard(router: Router) {
 
     // the route need login but the user is not logged in, then switch to the login page
     if (!isLogin) {
-      next({ name: loginRoute, query: { redirect: to.fullPath } });
+      // 如果正在退出登录，不添加redirect参数，避免新用户登录后跳转到旧用户的页面
+      const query = isLoggingOut ? {} : { redirect: to.fullPath };
+      next({ name: loginRoute, query });
       return;
     }
 
     // if the user is logged in but does not have authorization, then switch to the 403 page
     if (!hasAuth) {
-      next({ name: noAuthorizationRoute });
+      // 特殊处理：非管理员用户访问首页时，重定向到个人中心而不是403
+      if (to.name === 'home') {
+        next({ name: 'user-center' });
+      } else {
+        next({ name: noAuthorizationRoute });
+      }
       return;
     }
 
@@ -119,8 +132,9 @@ async function initRoute(to: RouteLocationNormalized): Promise<RouteLocationRaw 
     }
 
     // if the user is not logged in, then switch to the login page
+    const authStore = useAuthStore();
     const loginRoute: RouteKey = 'login';
-    const query = getRouteQueryOfLoginRoute(to, routeStore.routeHome);
+    const query = getRouteQueryOfLoginRoute(to, routeStore.routeHome, authStore.isLoggingOut);
 
     const location: RouteLocationRaw = {
       name: loginRoute,
@@ -187,7 +201,12 @@ function handleRouteSwitch(to: RouteLocationNormalized, from: RouteLocationNorma
   next();
 }
 
-function getRouteQueryOfLoginRoute(to: RouteLocationNormalized, routeHome: RouteKey) {
+function getRouteQueryOfLoginRoute(to: RouteLocationNormalized, routeHome: RouteKey, isLoggingOut?: boolean) {
+  // 如果正在退出登录，不添加redirect参数
+  if (isLoggingOut) {
+    return {};
+  }
+
   const loginRoute: RouteKey = 'login';
   const redirect = to.fullPath;
   const [redirectPath, redirectQuery] = redirect.split('?');

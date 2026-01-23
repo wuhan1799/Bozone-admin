@@ -8,6 +8,7 @@ import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
 import { useThemeStore } from '../theme';
+import { useAuthStore } from '../auth';
 import {
   extractTabsByAllRoutes,
   filterTabsByIds,
@@ -25,6 +26,7 @@ import {
 export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   const routeStore = useRouteStore();
   const themeStore = useThemeStore();
+  const authStore = useAuthStore();
   const { routerPush } = useRouterPush(false);
 
   /** Tabs */
@@ -36,10 +38,33 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   /** Init home tab */
   function initHomeTab() {
     homeTab.value = getDefaultHomeTab(router, routeStore.routeHome);
+
+    // 检查用户是否有权限访问实际的首页
+    const userRoles = Array.from(authStore.userInfo.roles || []);
+
+    const canAccessHome = userRoles.some(role => role === 'super_admin' || role === 'admin');
+
+    // 如果没有权限访问首页，且当前 homeTab 是首页标签，则清除它
+    if (!canAccessHome && homeTab.value?.routeKey === 'home') {
+      homeTab.value = undefined;
+    }
   }
 
   /** Get all tabs */
-  const allTabs = computed(() => getAllTabs(tabs.value, homeTab.value));
+  const allTabs = computed(() => {
+    // 检查用户是否有权限访问首页
+    const userRoles = Array.from(authStore.userInfo.roles || []);
+
+    const canAccessHome = userRoles.some(role => role === 'super_admin' || role === 'admin');
+
+    // 如果没有权限访问首页，且 homeTab 是首页标签，则不传递 homeTab
+    let effectiveHomeTab = homeTab.value;
+    if (!canAccessHome && homeTab.value?.routeKey === 'home') {
+      effectiveHomeTab = undefined;
+    }
+
+    return getAllTabs(tabs.value, effectiveHomeTab);
+  });
 
   /** Active tab id */
   const activeTabId = ref<string>('');
@@ -64,6 +89,15 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
     if (themeStore.tab.cache && storageTabs) {
       const extractedTabs = extractTabsByAllRoutes(router, storageTabs);
       tabs.value = updateTabsByI18nKey(extractedTabs);
+
+      // 检查用户权限，如果没有首页访问权限，过滤掉首页标签
+      const userRoles = Array.from(authStore.userInfo.roles || []);
+
+      const canAccessHome = userRoles.some(role => role === 'super_admin' || role === 'admin');
+
+      if (!canAccessHome) {
+        tabs.value = tabs.value.filter(tab => tab.routeKey !== 'home');
+      }
     }
 
     // 不添加登录路由的标签

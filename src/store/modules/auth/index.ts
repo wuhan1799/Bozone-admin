@@ -38,6 +38,9 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     buttons: []
   });
 
+  // 标记是否正在执行退出操作，用于路由守卫判断
+  const isLoggingOut = ref(false);
+
   /** Save userInfo to localStorage */
   function saveUserInfoToStorage() {
     const userInfoCopy = JSON.parse(JSON.stringify(userInfo));
@@ -86,6 +89,9 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       }
     }
 
+    // 标记正在退出操作，用于路由守卫判断
+    isLoggingOut.value = true;
+
     // 成功后清理前端
     clearAuthStorage();
     localStg.remove('userInfo');
@@ -110,8 +116,13 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     await tabStore.clearTabs();
     await routeStore.resetStore();
 
-    // 直接跳转到登录页面，避免params处理正则表达式路径的问题
-    await toLogin();
+    // 直接跳转到登录页面，不带上 redirect 参数，避免新用户登录后跳转到上一个用户的页面
+    try {
+      await router.push({ path: '/login/pwd-login' });
+    } finally {
+      // 确保标志被重置，即使跳转失败
+      isLoggingOut.value = false;
+    }
   }
 
   /** Record the user ID of the previous login session Used to compare with the current user ID on next login */
@@ -278,6 +289,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     userInfo,
     isStaticSuper,
     isLogin,
+    isLoggingOut,
     loginLoading,
     resetStore,
     login,

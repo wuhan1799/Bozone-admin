@@ -15,8 +15,7 @@ function getInitSearchParams(): Api.SystemManage.MenuSearchParams {
   return {
     current: 1,
     size: 10,
-    hideInMenu: false,
-    parentId: 0
+    hideInMenu: false
   };
 }
 
@@ -28,13 +27,6 @@ const { columns, columnChecks, data, loading, getData, mobilePagination } = useU
   api: () => fetchGetMenuList({ ...searchParams }),
   transform: response => {
     const transformed = defaultTransform<Api.SystemManage.Menu>(response);
-    // 前端过滤：只显示父菜单且未隐藏的菜单
-    if (transformed.data) {
-      transformed.data = transformed.data.filter(
-        (item: Api.SystemManage.Menu) => !item.hideInMenu && item.parentId === 0
-      );
-      transformed.total = transformed.data.length;
-    }
     return transformed;
   },
   onPaginationParamsChange: params => {
