@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineOptions({
-  name: '文章管理'
+  name: 'ArticleManage'
 });
 </script>
 
