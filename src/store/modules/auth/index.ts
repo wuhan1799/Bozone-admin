@@ -45,7 +45,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   function saveUserInfoToStorage() {
     const userInfoCopy = JSON.parse(JSON.stringify(userInfo));
     localStg.set('userInfo', userInfoCopy);
-    console.log('[Auth] Saved userInfo to storage:', userInfoCopy);
   }
 
   /** Restore userInfo from localStorage */
@@ -53,9 +52,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     const storedUserInfo = localStg.get('userInfo') as Api.Auth.UserInfo;
     if (storedUserInfo) {
       Object.assign(userInfo, storedUserInfo);
-      console.log('[Auth] Restored userInfo from storage:', storedUserInfo);
-    } else {
-      console.log('[Auth] No userInfo found in storage');
     }
   }
 

@@ -229,7 +229,9 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: 'Typeit',
     plugin_tables: 'Tables',
-    plugin_tables_vtable: 'VTable'
+    plugin_tables_vtable: 'VTable',
+    content: 'Content Management',
+    content_artmgr: 'Article Management'
   },
   page: {
     user: {
@@ -582,6 +584,9 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: 'Total {total} items'
+  },
+  content: {
+    title: 'Content Management'
   }
 };
 

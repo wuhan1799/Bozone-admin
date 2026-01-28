@@ -2,6 +2,7 @@
 import { computed, h, ref, watch } from 'vue';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import { fetchAddMenu, fetchUpdateMenu } from '@/service/api';
+import { useAuthStore } from '@/store/modules/auth';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const authStore = useAuthStore();
 
 interface Emits {
   (e: 'submitted'): void;
@@ -270,19 +272,20 @@ async function handleSubmit() {
   await validate();
 
   const params = getSubmitParams();
+  const currentUserId = authStore.userInfo.userId || authStore.userInfo.userName || '';
 
   let data: Api.SystemManage.Menu;
   if (props.operateType === 'add' || props.operateType === 'addChild') {
     data = {
       ...params,
       id: Date.now(),
-      createBy: '',
+      createBy: currentUserId,
       createTime: '',
-      updateBy: '',
+      updateBy: currentUserId,
       updateTime: ''
     } as Api.SystemManage.Menu;
   } else {
-    data = { ...props.rowData, ...params } as Api.SystemManage.Menu;
+    data = { ...props.rowData, ...params, updateBy: currentUserId } as Api.SystemManage.Menu;
   }
 
   const { error } = await (props.operateType === 'add' || props.operateType === 'addChild'

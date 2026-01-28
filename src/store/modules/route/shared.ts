@@ -43,13 +43,26 @@ function filterAuthRouteByRoles(route: ElegantConstRoute, roles: string[]): Eleg
 }
 
 /**
+ * Get order from route, support meta.order / order / orderNum
+ *
+ * @param route route
+ */
+function getRouteOrder(route: ElegantConstRoute): number {
+  // Priority: meta.orderNum > meta.order > order > orderNum
+  const order = route.meta?.orderNum ?? route.meta?.order ?? (route as any).order ?? (route as any).orderNum;
+  const orderValue = Number(order) || 0;
+
+  return orderValue;
+}
+
+/**
  * sort route by order
  *
  * @param route route
  */
 function sortRouteByOrder(route: ElegantConstRoute) {
   if (route.children?.length) {
-    route.children.sort((next, prev) => (Number(next.meta?.order) || 0) - (Number(prev.meta?.order) || 0));
+    route.children.sort((next, prev) => getRouteOrder(next) - getRouteOrder(prev));
     route.children.forEach(sortRouteByOrder);
   }
 
@@ -62,7 +75,7 @@ function sortRouteByOrder(route: ElegantConstRoute) {
  * @param routes routes
  */
 export function sortRoutesByOrder(routes: ElegantConstRoute[]) {
-  routes.sort((next, prev) => (Number(next.meta?.order) || 0) - (Number(prev.meta?.order) || 0));
+  routes.sort((next, prev) => getRouteOrder(next) - getRouteOrder(prev));
   routes.forEach(sortRouteByOrder);
 
   return routes;

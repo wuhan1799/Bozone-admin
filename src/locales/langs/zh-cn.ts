@@ -158,6 +158,8 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
+    content: '内容管理',
+    content_artmgr: '文章管理',
     manage_permission: '权限管理',
     login: '登录',
     403: '无权限',
@@ -582,6 +584,9 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: '共 {total} 条'
+  },
+  content: {
+    title: '内容管理'
   }
 };
 

@@ -96,6 +96,27 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'content',
+    path: '/content',
+    component: 'layout.base',
+    meta: {
+      title: 'content',
+      i18nKey: 'route.content',
+      order: 49
+    },
+    children: [
+      {
+        name: 'content_artmgr',
+        path: '/content/artmgr',
+        component: 'view.content_artmgr',
+        meta: {
+          title: 'content_artmgr',
+          i18nKey: 'route.content_artmgr'
+        }
+      }
+    ]
+  },
+  {
     name: 'function',
     path: '/function',
     component: 'layout.base',
