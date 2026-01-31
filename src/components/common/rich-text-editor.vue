@@ -27,6 +27,14 @@ const editorRef = ref<WangEditor>();
 const domRef = ref<HTMLElement>();
 const isReady = ref(false);
 
+// 将HTML内容中的图片URL转换为代理路径
+function convertImageUrlsToProxy(html: string): string {
+  if (!html) return html;
+  return html.replace(/src=["'](https?:\/\/[^"']+)?(\/uploads\/[^"']+)["']/gi, (_match, _p1, p2) => {
+    return `src="/proxy-default${p2}"`;
+  });
+}
+
 function initEditor() {
   if (!domRef.value) return;
 
@@ -65,10 +73,21 @@ function initEditor() {
   ];
 
   // 配置图片上传（如果有上传接口）
-  editorRef.value.config.uploadImgServer = '/proxy-default/upload/image';
+  editorRef.value.config.uploadImgServer = '/proxy-default/content/uploadArticleImage';
   editorRef.value.config.uploadImgMaxSize = 2 * 1024 * 1024; // 2M
   editorRef.value.config.uploadImgMaxLength = 5;
   editorRef.value.config.uploadFileName = 'file';
+  // 自定义上传成功回调，将完整URL转换为代理路径
+  editorRef.value.config.uploadImgHooks = {
+    customInsert(insertImg: (url: string) => void, result: any) {
+      let url = result.data?.url || result.url || '';
+      // 将完整URL转换为代理路径
+      if (url && url.includes('/uploads/')) {
+        url = `/proxy-default${url.substring(url.indexOf('/uploads/'))}`;
+      }
+      insertImg(url);
+    }
+  };
 
   // 内容变化回调
   editorRef.value.config.onchange = (html: string) => {
@@ -77,9 +96,9 @@ function initEditor() {
 
   editorRef.value.create();
 
-  // 设置初始内容
+  // 设置初始内容（转换图片URL）
   if (props.modelValue) {
-    editorRef.value.txt.html(props.modelValue);
+    editorRef.value.txt.html(convertImageUrlsToProxy(props.modelValue));
   }
 
   isReady.value = true;
@@ -91,8 +110,9 @@ watch(
   val => {
     if (editorRef.value && isReady.value) {
       const currentHtml = editorRef.value.txt.html();
-      if (val !== currentHtml) {
-        editorRef.value.txt.html(val || '');
+      const convertedVal = convertImageUrlsToProxy(val || '');
+      if (convertedVal !== currentHtml) {
+        editorRef.value.txt.html(convertedVal);
       }
     }
   }

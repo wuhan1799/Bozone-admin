@@ -93,12 +93,12 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       showOverflowTooltip: true
     },
     {
-      prop: 'categoryName',
+      prop: 'catName',
       label: $t('page.manage.content.article.category'),
       width: 120
     },
     {
-      prop: 'sortOrder',
+      prop: 'weigh',
       label: $t('page.manage.content.article.sortOrder'),
       width: 80,
       align: 'center'

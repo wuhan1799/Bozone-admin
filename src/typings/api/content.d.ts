@@ -44,13 +44,13 @@ declare namespace Api {
       /** article content */
       content: string;
       /** category id */
-      categoryId: number;
+      categoryId?: number;
       /** category name */
-      categoryName: string;
+      catName: string;
       /** cover images (JSON array of image URLs) */
       images: string;
       /** sort order (weigh) */
-      sortOrder: number;
+      weigh: number;
       /** status: 0=hide, 1=show */
       status: number;
     };

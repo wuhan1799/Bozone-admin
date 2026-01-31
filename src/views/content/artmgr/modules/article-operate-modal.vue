@@ -45,10 +45,9 @@ function createDefaultModel(): Api.Content.Article {
     id: 0,
     title: '',
     content: '',
-    categoryId: 0,
-    categoryName: '',
+    catName: '',
     images: '',
-    sortOrder: 0,
+    weigh: 0,
     status: 1
   };
 }
@@ -59,7 +58,14 @@ const imageList = computed<string[]>({
     if (!model.images) return [];
     try {
       const parsed = JSON.parse(model.images);
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      // 将完整URL转换为代理路径
+      return parsed.map((url: string) => {
+        if (url && url.includes('/uploads/')) {
+          return `/proxy-default${url.substring(url.indexOf('/uploads/'))}`;
+        }
+        return url;
+      });
     } catch {
       return [];
     }
@@ -71,8 +77,13 @@ const imageList = computed<string[]>({
 
 // 处理图片上传成功
 function handleImageSuccess(url: string) {
+  // 将完整URL转换为代理路径
+  let proxyUrl = url;
+  if (url && url.includes('/uploads/')) {
+    proxyUrl = `/proxy-default${url.substring(url.indexOf('/uploads/'))}`;
+  }
   const current = imageList.value;
-  current.push(url);
+  current.push(proxyUrl);
   imageList.value = current;
 }
 
@@ -165,7 +176,7 @@ watch(visible, () => {
                 </div>
               </div>
               <ElUpload
-                action="/proxy-default/upload/image"
+                action="/proxy-default/content/uploadArticleImage"
                 name="file"
                 :show-file-list="false"
                 :on-success="(res: any) => handleImageSuccess(res.data?.url || res.url)"
@@ -186,8 +197,8 @@ watch(visible, () => {
         <ElCol :span="8">
           <ElRow>
             <ElCol :span="24">
-              <ElFormItem :label="$t('page.manage.content.article.sortOrder')" prop="sortOrder" label-width="80px">
-                <ElInputNumber v-model="model.sortOrder" :min="0" class="w-full" />
+              <ElFormItem :label="$t('page.manage.content.article.sortOrder')" prop="weigh" label-width="80px">
+                <ElInputNumber v-model="model.weigh" :min="0" class="w-full" />
               </ElFormItem>
             </ElCol>
           </ElRow>
