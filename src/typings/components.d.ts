@@ -113,6 +113,7 @@ declare module 'vue' {
     MenuToggler: typeof import('./../components/common/menu-toggler.vue')['default']
     PinToggler: typeof import('./../components/common/pin-toggler.vue')['default']
     ReloadButton: typeof import('./../components/common/reload-button.vue')['default']
+    RichTextEditor: typeof import('./../components/common/rich-text-editor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SoybeanAvatar: typeof import('./../components/custom/soybean-avatar.vue')['default']

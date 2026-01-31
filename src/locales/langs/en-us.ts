@@ -34,8 +34,10 @@ const local: App.I18n.Schema = {
     lookForward: 'Coming soon',
     modify: 'Modify',
     modifySuccess: 'Modify Success',
+    operationSuccess: 'Operation Successful',
     noData: 'No Data',
     operate: 'Operate',
+    upload: 'Upload',
     pleaseCheckValue: 'Please check whether the value is valid',
     refresh: 'Refresh',
     reset: 'Reset',
@@ -159,6 +161,7 @@ const local: App.I18n.Schema = {
   },
   route: {
     manage_permission: 'Permission Management',
+    content_categories: 'Category Management',
     login: 'Login',
     403: 'No Permission',
     404: 'Page Not Found',
@@ -460,6 +463,44 @@ const local: App.I18n.Schema = {
         gender: {
           male: 'Male',
           female: 'Female'
+        }
+      },
+      content: {
+        category: {
+          title: 'Category List',
+          name: 'Category Name',
+          weigh: 'Sort Order',
+          status: 'Status',
+          show: 'Show',
+          hide: 'Hide',
+          form: {
+            name: 'Please enter category name',
+            weigh: 'Please enter sort order',
+            status: 'Please select status'
+          },
+          addCategory: 'Add Category',
+          editCategory: 'Edit Category'
+        },
+        article: {
+          title: 'Article List',
+          articleTitle: 'Article Title',
+          category: 'Category',
+          coverImage: 'Cover Image',
+          sortOrder: 'Sort Order',
+          status: 'Status',
+          show: 'Show',
+          hide: 'Hide',
+          content: 'Content',
+          form: {
+            title: 'Please enter article title',
+            category: 'Please select category',
+            images: 'Please upload cover images',
+            sortOrder: 'Please enter sort order',
+            status: 'Please select status',
+            content: 'Please enter article content'
+          },
+          addArticle: 'Add Article',
+          editArticle: 'Edit Article'
         }
       },
       menu: {

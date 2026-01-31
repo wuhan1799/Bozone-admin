@@ -187,6 +187,7 @@ const routeMap: RouteMap = {
   "alova_user": "/alova/user",
   "content": "/content",
   "content_artmgr": "/content/artmgr",
+  "content_categories": "/content/categories",
   "function": "/function",
   "function_hide-child": "/function/hide-child",
   "function_hide-child_one": "/function/hide-child/one",

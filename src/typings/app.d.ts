@@ -327,8 +327,10 @@ declare namespace App {
         lookForward: string;
         modify: string;
         modifySuccess: string;
+        operationSuccess: string;
         noData: string;
         operate: string;
+        upload: string;
         pleaseCheckValue: string;
         refresh: string;
         reset: string;
@@ -711,6 +713,44 @@ declare namespace App {
             iconType: {
               iconify: string;
               local: string;
+            };
+          };
+          content: {
+            category: {
+              title: string;
+              name: string;
+              weigh: string;
+              status: string;
+              show: string;
+              hide: string;
+              form: {
+                name: string;
+                weigh: string;
+                status: string;
+              };
+              addCategory: string;
+              editCategory: string;
+            };
+            article: {
+              title: string;
+              articleTitle: string;
+              category: string;
+              coverImage: string;
+              sortOrder: string;
+              status: string;
+              show: string;
+              hide: string;
+              content: string;
+              form: {
+                title: string;
+                category: string;
+                images: string;
+                sortOrder: string;
+                status: string;
+                content: string;
+              };
+              addArticle: string;
+              editArticle: string;
             };
           };
           permission: {

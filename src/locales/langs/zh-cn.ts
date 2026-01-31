@@ -34,8 +34,10 @@ const local: App.I18n.Schema = {
     lookForward: '敬请期待',
     modify: '修改',
     modifySuccess: '修改成功',
+    operationSuccess: '操作成功',
     noData: '无数据',
     operate: '操作',
+    upload: '上传',
     pleaseCheckValue: '请检查输入的值是否合法',
     refresh: '刷新',
     reset: '重置',
@@ -160,6 +162,7 @@ const local: App.I18n.Schema = {
   route: {
     content: '内容管理',
     content_artmgr: '文章管理',
+    content_categories: '分类管理',
     manage_permission: '权限管理',
     login: '登录',
     403: '无权限',
@@ -460,6 +463,44 @@ const local: App.I18n.Schema = {
         gender: {
           male: '男',
           female: '女'
+        }
+      },
+      content: {
+        category: {
+          title: '分类列表',
+          name: '分类名称',
+          weigh: '排序',
+          status: '状态',
+          show: '显示',
+          hide: '隐藏',
+          form: {
+            name: '请输入分类名称',
+            weigh: '请输入排序数字',
+            status: '请选择状态'
+          },
+          addCategory: '新增分类',
+          editCategory: '编辑分类'
+        },
+        article: {
+          title: '文章列表',
+          articleTitle: '文章标题',
+          category: '所属分类',
+          coverImage: '封面图片',
+          sortOrder: '排序',
+          status: '状态',
+          show: '显示',
+          hide: '隐藏',
+          content: '文章内容',
+          form: {
+            title: '请输入文章标题',
+            category: '请选择分类',
+            images: '请上传封面图片',
+            sortOrder: '请输入排序数字',
+            status: '请选择状态',
+            content: '请输入文章内容'
+          },
+          addArticle: '新增文章',
+          editArticle: '编辑文章'
         }
       },
       menu: {
