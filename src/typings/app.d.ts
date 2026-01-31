@@ -752,6 +752,29 @@ declare namespace App {
               addArticle: string;
               editArticle: string;
             };
+            guide: {
+              title: string;
+              guideTitle: string;
+              subtitle: string;
+              icon: string;
+              releaseDate: string;
+              sortOrder: string;
+              status: string;
+              show: string;
+              hide: string;
+              content: string;
+              form: {
+                title: string;
+                subtitle: string;
+                icon: string;
+                releaseDate: string;
+                sortOrder: string;
+                status: string;
+                content: string;
+              };
+              addGuide: string;
+              editGuide: string;
+            };
           };
           permission: {
             title: string;

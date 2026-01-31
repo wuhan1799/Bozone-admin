@@ -89,3 +89,48 @@ export function fetchBatchDeleteArticle(ids: number[]) {
     data: { ids }
   });
 }
+
+/** get guide list */
+export function fetchGetGuideList(params?: Api.Content.GuideSearchParams) {
+  return request<Api.Content.GuideList>({
+    url: '/content/guideList',
+    method: 'get',
+    params
+  });
+}
+
+/** add guide */
+export function fetchAddGuide(data: Api.Content.Guide) {
+  return request<null>({
+    url: '/content/addGuide',
+    method: 'post',
+    data
+  });
+}
+
+/** update guide */
+export function fetchUpdateGuide(data: Api.Content.Guide) {
+  return request<null>({
+    url: '/content/updateGuide',
+    method: 'post',
+    data
+  });
+}
+
+/** delete guide */
+export function fetchDeleteGuide(id: number) {
+  return request<null>({
+    url: '/content/deleteGuide',
+    method: 'delete',
+    params: { id }
+  });
+}
+
+/** batch delete guides */
+export function fetchBatchDeleteGuide(ids: number[]) {
+  return request<null>({
+    url: '/content/batchDeleteGuide',
+    method: 'delete',
+    data: { ids }
+  });
+}

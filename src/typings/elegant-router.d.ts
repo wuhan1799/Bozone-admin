@@ -42,6 +42,7 @@ declare module "@elegant-router/types" {
     "content": "/content";
     "content_artmgr": "/content/artmgr";
     "content_categories": "/content/categories";
+    "content_guide": "/content/guide";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -180,6 +181,7 @@ declare module "@elegant-router/types" {
     | "alova_user"
     | "content_artmgr"
     | "content_categories"
+    | "content_guide"
     | "function_hide-child_one"
     | "function_hide-child_three"
     | "function_hide-child_two"

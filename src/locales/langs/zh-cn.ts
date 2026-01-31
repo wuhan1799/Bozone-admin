@@ -163,6 +163,7 @@ const local: App.I18n.Schema = {
     content: '内容管理',
     content_artmgr: '文章管理',
     content_categories: '分类管理',
+    content_guide: '校友指南',
     manage_permission: '权限管理',
     login: '登录',
     403: '无权限',
@@ -501,6 +502,29 @@ const local: App.I18n.Schema = {
           },
           addArticle: '新增文章',
           editArticle: '编辑文章'
+        },
+        guide: {
+          title: '校友指南列表',
+          guideTitle: '标题',
+          subtitle: '副标题',
+          icon: '图标',
+          releaseDate: '发布时间',
+          sortOrder: '排序',
+          status: '状态',
+          show: '显示',
+          hide: '隐藏',
+          content: '内容',
+          form: {
+            title: '请输入标题',
+            subtitle: '请输入副标题',
+            icon: '请上传图标',
+            releaseDate: '请选择发布时间',
+            sortOrder: '请输入排序数字',
+            status: '请选择状态',
+            content: '请输入内容'
+          },
+          addGuide: '新增指南',
+          editGuide: '编辑指南'
         }
       },
       menu: {

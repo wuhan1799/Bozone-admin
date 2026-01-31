@@ -122,6 +122,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'content_categories',
           i18nKey: 'route.content_categories'
         }
+      },
+      {
+        name: 'content_guide',
+        path: '/content/guide',
+        component: 'view.content_guide',
+        meta: {
+          title: 'content_guide',
+          i18nKey: 'route.content_guide'
+        }
       }
     ]
   },

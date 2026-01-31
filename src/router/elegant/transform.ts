@@ -59,6 +59,8 @@ function transformElegantRouteToVueRoute(
     const view = component.replace(VIEW_PREFIX, '');
 
     if(!views[view]) {
+      console.error(`[Router Transform] View "${view}" not found for component "${component}"`);
+      console.error('[Router Transform] Available views:', Object.keys(views));
       throw new Error(`View component "${view}" not found`);
     }
 
@@ -188,6 +190,7 @@ const routeMap: RouteMap = {
   "content": "/content",
   "content_artmgr": "/content/artmgr",
   "content_categories": "/content/categories",
+  "content_guide": "/content/guide",
   "function": "/function",
   "function_hide-child": "/function/hide-child",
   "function_hide-child_one": "/function/hide-child/one",

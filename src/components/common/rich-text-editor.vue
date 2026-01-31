@@ -42,7 +42,7 @@ function initEditor() {
 
   // 配置编辑器
   editorRef.value.config.placeholder = props.placeholder;
-  editorRef.value.config.zIndex = 10;
+  editorRef.value.config.zIndex = 1;
 
   // 配置菜单
   editorRef.value.config.menus = [

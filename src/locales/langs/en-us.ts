@@ -160,8 +160,11 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
-    manage_permission: 'Permission Management',
+    content: 'Content Management',
+    content_artmgr: 'Article Management',
     content_categories: 'Category Management',
+    content_guide: 'Alumni Guide',
+    manage_permission: 'Permission Management',
     login: 'Login',
     403: 'No Permission',
     404: 'Page Not Found',
@@ -232,9 +235,7 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: 'Typeit',
     plugin_tables: 'Tables',
-    plugin_tables_vtable: 'VTable',
-    content: 'Content Management',
-    content_artmgr: 'Article Management'
+    plugin_tables_vtable: 'VTable'
   },
   page: {
     user: {
@@ -501,6 +502,29 @@ const local: App.I18n.Schema = {
           },
           addArticle: 'Add Article',
           editArticle: 'Edit Article'
+        },
+        guide: {
+          title: 'Alumni Guide List',
+          guideTitle: 'Title',
+          subtitle: 'Subtitle',
+          icon: 'Icon',
+          releaseDate: 'Release Date',
+          sortOrder: 'Sort Order',
+          status: 'Status',
+          show: 'Show',
+          hide: 'Hide',
+          content: 'Content',
+          form: {
+            title: 'Please enter title',
+            subtitle: 'Please enter subtitle',
+            icon: 'Please upload icon',
+            releaseDate: 'Please select release date',
+            sortOrder: 'Please enter sort order',
+            status: 'Please select status',
+            content: 'Please enter content'
+          },
+          addGuide: 'Add Guide',
+          editGuide: 'Edit Guide'
         }
       },
       menu: {

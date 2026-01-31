@@ -62,5 +62,35 @@ declare namespace Api {
 
     /** article list */
     type ArticleList = Common.PaginatingQueryRecord<Article>;
+
+    /** guide */
+    type Guide = {
+      /** record id */
+      id: number;
+      /** guide title */
+      title: string;
+      /** guide subtitle */
+      subtitle: string;
+      /** guide icon */
+      icon: string;
+      /** release date */
+      releaseDate: string;
+      /** guide content */
+      content: string;
+      /** sort order (weigh) */
+      weigh: number;
+      /** status: 0=hide, 1=show */
+      status: string;
+      /** create time */
+      createtime: number;
+    };
+
+    /** guide search params */
+    type GuideSearchParams = CommonType.RecordNullable<
+      Pick<Api.Content.Guide, 'title' | 'status'> & CommonSearchParams
+    >;
+
+    /** guide list */
+    type GuideList = Common.PaginatingQueryRecord<Guide>;
   }
 }
